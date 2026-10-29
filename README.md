@@ -6,7 +6,7 @@ By [@eoinmcg](https://twitter.com/eoinmcg)
  ![Banner](https://raw.githubusercontent.com/eoinmcg/zog/main/promo/splash.png "Banner")
 
 
-| ![gameplay](https://raw.githubusercontent.com/eoinmcg/zog/main/promo/tunnel.png) | ![screenshot](https://raw.githubusercontent.com/eoinmcg/zog/main/promo/meteor.png) | ![gameplay](https://raw.githubusercontent.com/eoinmcg/zog/main/promo/night.gif) |
+| ![gameplay](https://raw.githubusercontent.com/eoinmcg/zog/main/promo/tunnel.png) | ![screenshot](https://raw.githubusercontent.com/eoinmcg/zog/main/promo/meteor.png) | ![gameplay](https://raw.githubusercontent.com/eoinmcg/zog/main/promo/night.png) |
 | :---: | :---: | :---: |
 
 
