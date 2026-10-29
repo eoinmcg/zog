@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <style>
+    body { transition: all 0.5s ease-in-out; background: #222; }
+    body.complete { opacity: 0; }
+    </style>
+
+    </head>
+
+  <body>
+    <div class="loading" style="margin: 40vh auto; width: 50vw; max-width: 300px;">
+      <h1 style="text-align: center; font-family: 'SfFedora', monospace; font-size: 32px; text-shadow:black 2px 2px 0; color: lime;">Loading...</h1>
+      <div class="progress" style="display: block; width: 0%; height: 10px; transition: width .5s ease-in; border-radius: 3px; box-shadow:black 2px 2px 0; background: hotpink;"></div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

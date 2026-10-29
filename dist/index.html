@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <style>body{background:#222;transition:all .5s ease-in-out}body.complete{opacity:0}</style>
+
+      <script>window.BUILD = "Thu Oct 29 2026 14:17:37 GMT+0200"; window.COMMIT = "unknown";</script>
+    <script type="module" crossorigin src="./game.js"></script>
+    
+    <link rel="manifest" href="manifest.json">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
+    
+</head>
+
+  <body>
+    <div class="loading" style="margin: 40vh auto; width: 50vw; max-width: 300px;">
+      <h1 style="text-align: center; font-family: 'SfFedora', monospace; font-size: 32px; text-shadow:black 2px 2px 0; color: lime;">Loading...</h1>
+      <div class="progress" style="display: block; width: 0%; height: 10px; transition: width .5s ease-in; border-radius: 3px; box-shadow:black 2px 2px 0; background: hotpink;"></div>
+    </div>
+
+  </body>
+</html>

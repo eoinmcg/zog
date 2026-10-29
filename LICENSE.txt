@@ -1,0 +1,56 @@
+# Licensing Information
+
+This project contains components distributed under different licenses. The MIT License below applies only to the project's source code, not to its graphics, music, or other third-party assets.
+
+## Source Code — MIT License
+
+The original source code of Escape From Zog is licensed under the MIT License. See the full license text below.
+
+The game uses LittleJS, an open-source game engine licensed under the MIT License. LittleJS remains subject to its own copyright notices and license terms.
+
+## Graphics and Visual Assets — All Rights Reserved
+
+Copyright © 2026 eoinmcg. All rights reserved.
+
+All original graphics, sprites, illustrations, textures, and other visual assets created for Escape From Zog are proprietary and are not covered by the MIT License.
+
+No permission is granted to copy, modify, redistribute, sell, or reuse these assets independently of the game without prior written permission from the copyright holder.
+
+Permission is granted to download and use these assets solely as part of playing the game as distributed.
+
+## Music and Audio - Creative Commons Attribution 4.0
+
+Music tracks included in this project are created by third-party artists and are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).
+
+These tracks are not covered by the project's MIT License or the restrictions on original visual assets.
+
+CC BY 4.0 permits sharing, modification, and commercial use, provided the license conditions, including appropriate attribution, are followed.
+
+For artist credits, track information, and license details, see: https://davidkbd.itch.io/interstellar-vol2-edm-metal-music-pack
+
+Full license: https://creativecommons.org/licenses/by/4.0/
+
+
+---
+
+## MIT License (for Source Code)
+
+Copyright (c) 2026 Eoin McGrath
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
