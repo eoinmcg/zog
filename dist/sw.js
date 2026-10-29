@@ -1,4 +1,4 @@
-const CACHE_NAME = 'escape-from-zog-v-unknown';
+const CACHE_NAME = 'escape-from-zog-v-f073779';
 const urlsToCache = ["./Orbitron-ExtraBold.ttf","./apple-icon-180.png","./bgs.png","./favicon.ico","./game.js","./index.html","./logo.png","./models","./music","./t.png"];
 
 self.addEventListener('install', event => {
