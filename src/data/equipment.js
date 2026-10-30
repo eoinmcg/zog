@@ -3,7 +3,7 @@ export default {
     tile: 8,
     max: 4,
     current: 0,
-    owned: true,
+    owned: false,
     cost: 10,
   },
   jetpack: {

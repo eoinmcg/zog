@@ -1,4 +1,4 @@
-import { hsl, vec3, rgb } from 'littlejsengine'
+import { hsl, vec3, rgb, rand, tile } from 'littlejsengine'
 // alienGreen - toxic green storm over an alien world
 //
 // A preset is plain data. Copy this file and change the numbers and painters
@@ -227,9 +227,9 @@ export default
         { paint: crystalRidge, texWidth: 1024, texHeight: 256, z: -250, y: 34, w: 320, h: 80, scroll: .3, tint: [1, 1, 1, 1] },
         { paint: spireCity, texWidth: 1024, texHeight: 256, z: -170, y: 19, w: 200, h: 50, scroll: 0, tint: [1, 1, 1, 1] },
         { paint: painters.clouds('rgba(15,60,90,', 40), texWidth: 1024, texHeight: 256, z: -230, y: 38, w: 420, h: 105, scroll: 3, tint: [.9, .8, 1, .95] },
-        // { paint: painters.clouds('rgba(110,255,190,', 34), texWidth: 1024, texHeight: 256, z: -200, y: 70, w: 420, h: 105, scroll: 5, tint: [1, .9, 1, .85] },
-        // { paint: painters.clouds('rgba(15,60,90,', 40), texWidth: 1024, texHeight: 256, z: -140, y: 58, w: 300, h: 75, scroll: 9, tint: [.8, .7, 1, .9] },
-        // { paint: painters.clouds('rgba(110,255,190,', 34), texWidth: 1024, texHeight: 256, z: -110, y: 82, w: 300, h: 75, scroll: 12, tint: [1, .8, 1, .75] },
+        { paint: painters.clouds('rgba(110,255,190,', 34), texWidth: 1024, texHeight: 256, z: -200, y: 70, w: 420, h: 105, scroll: 5, tint: [1, .9, 1, .85] },
+        { paint: painters.clouds('rgba(15,60,90,', 40), texWidth: 1024, texHeight: 256, z: -140, y: 58, w: 300, h: 75, scroll: 9, tint: [.8, .7, 1, .9] },
+        { paint: painters.clouds('rgba(110,255,190,', 34), texWidth: 1024, texHeight: 256, z: -110, y: 82, w: 300, h: 75, scroll: 12, tint: [1, .8, 1, .75] },
       ],
 
     // A sheet of drops above the road. Use `rain: null` for dry weather.

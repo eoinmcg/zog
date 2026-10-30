@@ -1,7 +1,7 @@
 import {
   EngineObject3D, buildCylinder,
   createCanvasContext, TextureInfo, vec3,
-  randInt, randSign, PI, hsl
+  randInt, randSign, PI, hsl, tile, Color,
 } from 'littlejsengine'
 
 import config from '../data/config';
@@ -11,8 +11,22 @@ import { boom } from '../helpers/particles';
 export default class Obstacle extends EngineObject3D {
   constructor(pos3D, size = 1, long = 1) {
 
-    const bricks = makeBrickTexture();
-    super(pos3D, buildCylinder(1, 1), bricks, undefined);
+    let texture,
+      p = config.palette,
+      col = p.white.col
+
+    const settings = state.level.obstacles
+    if (settings?.tile) {
+      texture = tile(settings.tile, config.tileSize)
+    } else {
+      texture = makeBrickTexture()
+    }
+    if (settings?.col) {
+      col = p[settings.col].col
+      console.log(col, settings.col)
+    }
+
+    super(pos3D, buildCylinder(1, 1), texture, col);
     this.scale3D = vec3(size * (10 * long), size * 2, size);
     this.size3D = vec3(size);      // matches scale3D so collision matches how it looks
     this.setCollision(true, true); // takes part in solid collision, and blocks
@@ -20,6 +34,7 @@ export default class Obstacle extends EngineObject3D {
     this.castShadow = true
     this.velocity3D = vec3(0, 0, state.speed);
     this.name = 'obstacle'
+
 
     switch (randInt(3)) {
       case 0: this.rotation3D.z = 0; break;
@@ -62,11 +77,12 @@ export default class Obstacle extends EngineObject3D {
   }
 }
 
-function makeBrickTexture() {
+function makeBrickTexture(col = 'poop') {
   const size = 64, context = createCanvasContext(size);
   context.fillStyle = hsl(.05, .4, .3);
   context.fillRect(0, 0, size, size);
   context.fillStyle = hsl(.05, .5, .5);
+  context.fillStyle = config.palette[col].col
   for (let row = 4; row--;)
     for (let col = 5; col--;)
       context.fillRect(col * 32 + (row & 1) * 8 - 8, row * 16, 30, 14);

@@ -176,7 +176,7 @@ export default
     // Fill light from behind the camera so the runner and enemies stay readable
     lights:
       [
-        // { from: vec3(-.2, .25, 1), color: hsl(.07, .5, .6), intensity: .6 },
+        { from: vec3(-.2, .25, 1), color: hsl(.07, .5, .6), intensity: .6 },
         { from: vec3(-.25, .25, 1), color: hsl(.6, .4, .65), intensity: .8 },
       ],
 
@@ -192,7 +192,7 @@ export default
         { paint: painters.stars(900), texWidth: 1024, texHeight: 256, z: -290, y: 105, w: 880, h: 220, scroll: .1, tint: [1, 1, 1, 1] },
         { paint: painters.clouds('rgba(255,110,50,', 28), texWidth: 1024, texHeight: 256, z: -245, y: 18, w: 420, h: 80, scroll: 5, tint: [1, 1, 1, .5] },
         { paint: badlandsRidge, texWidth: 1024, texHeight: 256, z: -250, y: 32, w: 340, h: 85, scroll: 0, tint: [.6, .45, .5, 1] },
-        { paint: volcanoes, texWidth: 1024, texHeight: 256, z: -215, y: 40, w: 240, h: 60, scroll: 0, tint: [.9, .75, .75, 1] },
+        { paint: volcanoes, texWidth: 1024, texHeight: 256, z: -215, y: 30, w: 240, h: 60, scroll: 0, tint: [.9, .75, .75, 1] },
         { paint: badlandsRidge, texWidth: 1024, texHeight: 256, z: -165, y: 22, w: 240, h: 60, scroll: 0, tint: [.8, .6, .6, 1] },
         { paint: painters.clouds('rgba(40,15,30,', 24), texWidth: 1024, texHeight: 256, z: -140, y: 55, w: 300, h: 75, scroll: 8, tint: [1, 1, 1, .4] },
       ],

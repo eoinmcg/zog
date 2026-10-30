@@ -13,6 +13,7 @@ import Settings from "../scenes/settings.js";
 import Model from "../scenes/model.js";
 import Shop from "../scenes/shop.js";
 import Logo from "../scenes/logo.js";
+import Scratch from "../scenes/scratch.js";
 
 const Scenes = {
   Play: Play,
@@ -22,6 +23,7 @@ const Scenes = {
   Model: Model,
   Shop: Shop,
   Logo: Logo,
+  Scratch: Scratch,
 };
 
 export default class SceneManager {

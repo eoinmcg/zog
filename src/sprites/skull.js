@@ -3,7 +3,7 @@ import {
 } from 'littlejsengine';
 import Baddie from './baddie';
 import state from '../data/state';
-import { fire } from '../helpers/particles';
+import { fire, spark } from '../helpers/particles';
 
 export default class Skull extends Baddie {
   constructor(pos) {
@@ -32,7 +32,7 @@ export default class Skull extends Baddie {
       sin(time * this.bobSpeed + this.bobPhase) * this.bobHeight;
     this.rotation3D.z = sin(time * this.bobSpeed + this.bobPhase) * .15;
 
-    if (rand() > .1) { fire(this.pos3D) }
+    if (rand() > .7) { fire(this.pos3D) }
   }
 }
 

@@ -95,7 +95,7 @@ export default class Help extends Scene {
       drawText('Tap right - Jump', vec2(0, 4), 1.5, WHITE, 0, BLACK, pos)
     } else {
       drawText('[x]  Change Direction', vec2(-8, 6), 1.5, WHITE, 0, BLACK, pos)
-      drawText('[y]  Jump', vec2(-8, 4), 1.5, WHITE, 0, BLACK, pos)
+      drawText('[z]  Jump', vec2(-8, 4), 1.5, WHITE, 0, BLACK, pos)
       drawText('Or use a gamepad', vec2(-8, 2), 1.5, WHITE, 0, BLACK, pos)
     }
 

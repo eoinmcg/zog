@@ -28,6 +28,23 @@ const bgs = [
 
 export default [
   {
+    title: 'ALIENOPOLIS',
+    speed: .7,
+    distance: 10,
+    weather: bgs[0],
+    music: 3,
+    groundCol: new Color(.1, .5, .5),
+    setUp() { makeGround(this.groundCol) },
+    phases: [
+      // { start: 3, end: 55, types: ['crawler'], freq: [1, 2] },
+      // { start: 0, end: 75, types: ['seeker'], freq: [3, 5] },
+      { start: 0, end: 75, types: ['bat'], freq: [3, 5] },
+      // { start: 0, end: 75, types: ['crate'], freq: [3, 5] },
+      { start: 0, end: 90, types: ['totem'], freq: [.5, .8] },
+      // { start: 0, end: 75, types: ['wave.left', 'wave.right', 'wave.center'], freq: [3, 5] },
+    ],
+  },
+  {
     title: 'GOING UNDERGROUND',
     speed: .7,
     distance: 60,
@@ -40,19 +57,10 @@ export default [
       { start: 0, end: 55, types: ['obstacle.long'], freq: [.5, 1] },
       { start: 0, end: 75, types: ['coins'], freq: [5, 8] },
     ],
-  },
-  {
-    title: 'ALIENOPOLIS',
-    speed: .7,
-    distance: 10,
-    weather: bgs[0],
-    music: 3,
-    groundCol: new Color(.1, .5, .5),
-    setUp() { makeGround(this.groundCol) },
-    phases: [
-      { start: 3, end: 55, types: ['crawler'], freq: [1, 2] },
-      { start: 0, end: 75, types: ['wave.left', 'wave.right', 'wave.center'], freq: [3, 5] },
-    ],
+    obstacles: {
+      col: 'plum',
+      tile: 31
+    }
   },
   {
     title: 'A LITTLE SHOWER',

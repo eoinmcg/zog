@@ -85,7 +85,6 @@ export default class Baddie extends EngineObject3D {
 
     if (o.name === 'player') {
       o.loseLive(this);
-
     }
 
     if (this.health <= 0) {

@@ -16,8 +16,8 @@ By [@eoinmcg](https://twitter.com/eoinmcg)
 ----
 
 Controls:
-- [X] change direction and shoot
-- [Z] Jump
+- **X** change direction and shoot
+- **Z** Jump
 - or use a gamepad
 - Touch devices: Tap left or right
 - [M] mutes music & sfx
