@@ -13,20 +13,25 @@ async function runBuild() {
   const zipFileName = `${safeTitle}.zip`;
 
   // 2. Remove files specified in the removeFiles array
-  const removeFiles = [
-    'dist/t.xcf',
-    'dist/bgs.xcf',
-    'dist/SfFedora.ttf',
-  ];
+  const removeExtensions = ['.xcf'];
+  const removeFiles = ['sffedora.ttf'];
 
-  removeFiles.forEach(file => {
-    const filePath = path.resolve(file);
-    if (fs.existsSync(filePath)) {
+  fs.readdirSync(distDir, {
+    recursive: true,
+    withFileTypes: true
+  })
+    .filter(entry =>
+      entry.isFile() &&
+      (
+        removeExtensions.includes(path.extname(entry.name).toLowerCase()) ||
+        removeFiles.includes(entry.name.toLowerCase())
+      )
+    )
+    .forEach(entry => {
+      const filePath = path.join(entry.parentPath, entry.name);
       fs.unlinkSync(filePath);
-      console.log(`[Clean] Removed: ${file}`);
-    }
-  });
-
+      console.log(`[Clean] Removed: ${filePath}`);
+    });
   // 3. Compute BUILD and COMMIT info
   const DATE = new Date().toString().split('(')[0].trim();
   let COMMIT = 'unknown';
@@ -52,41 +57,41 @@ async function runBuild() {
     }
 
     // 4. Setup PWA Offline Support
-    const distFiles = fs.readdirSync(distDir);
-    const filesToCache = distFiles.filter(f => f !== 'sw.js' && f !== 'manifest.json' && f !== zipFileName).map(f => `./${f}`);
+    const filesToCache = fs.readdirSync(distDir, {
+      recursive: true,
+      withFileTypes: true
+    })
+      .filter(entry => entry.isFile())
+      .map(entry => {
+        const fullPath = path.join(entry.parentPath, entry.name);
 
-    // Generate Service Worker (sw.js)
-    const swContent = `
-const CACHE_NAME = '${safeTitle}-v-${COMMIT}';
-const urlsToCache = ${JSON.stringify(filesToCache)};
-
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
-  );
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.map(key => {
-        if (key !== CACHE_NAME) return caches.delete(key);
+        return './' + path
+          .relative(distDir, fullPath)
+          .split(path.sep)
+          .join('/');
       })
-    ))
-  );
-  self.clients.claim();
-});
+      .filter(file =>
+        file !== './sw.js' &&
+        file !== './manifest.json' &&
+        file !== `./${zipFileName}`
+      )
+      .sort();
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
-  );
-});
-    `.trim();
+    // Load service worker template
+    const swTemplatePath = path.resolve('sw.template.js');
+    let swContent = fs.readFileSync(swTemplatePath, 'utf8');
 
+    // Populate placeholders
+    const cacheName = `${safeTitle}-v-${COMMIT}`;
+
+    swContent = swContent
+      .replace(/\bCACHE_NAME\b/g, JSON.stringify(cacheName))
+      .replace(/\bASSETS\b/g, JSON.stringify(filesToCache, null, 2));
+
+    // Write generated service worker
     fs.writeFileSync(path.join(distDir, 'sw.js'), swContent);
 
+    console.log(`[PWA] Generated sw.js with ${filesToCache.length} assets.`);
     // Generate manifest.json using the config title
     const manifest = {
       name: gameTitle,

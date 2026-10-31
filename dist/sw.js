@@ -1,26 +1,67 @@
-const CACHE_NAME = 'escape-from-zog-v-c4d379d';
-const urlsToCache = ["./Orbitron-ExtraBold.ttf","./apple-icon-180.png","./bgs.png","./doodles.xcf","./favicon.ico","./game.js","./index.html","./logo.png","./models","./music","./t.png"];
+const cacheName = "escape-from-zog-v-4c87984";
+const assets = [
+  "./Orbitron-ExtraBold.ttf",
+  "./apple-icon-180.png",
+  "./bgs.png",
+  "./favicon.ico",
+  "./game.js",
+  "./index.html",
+  "./logo.png",
+  "./models/earth.glb",
+  "./models/skull.glb",
+  "./models/ufo.glb",
+  "./models/ufoOld.glb",
+  "./models/ufo_simple.glb",
+  "./music/CosmicClash.ogg",
+  "./music/DeepSpace.ogg",
+  "./music/GalacticBattle.ogg",
+  "./music/MeteorShower.ogg",
+  "./music/OrbitalAssault.ogg",
+  "./music/gameOver.ogg",
+  "./music/levelComplete.ogg",
+  "./t.png"
+];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+self.addEventListener("install", (e) => {
+  console.log("[SW] Installing...");
+  e.waitUntil(
+    caches.open(cacheName).then((cache) => {
+      console.log("[SW] Caching all assets");
+      // Using map to catch which specific file fails
+      return Promise.all(
+        assets.map((url) => {
+          return cache
+            .add(url)
+            .catch((err) => console.error(`[SW] Failed to cache: ${url}`, err));
+        }),
+      );
+    }),
   );
-  self.skipWaiting();
 });
 
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.map(key => {
-        if (key !== CACHE_NAME) return caches.delete(key);
+// The Fetch Strategy: Network first, then fallback to Cache
+self.addEventListener("fetch", (e) => {
+  e.respondWith(
+    fetch(e.request)
+      .then((response) => {
+        // If the network request is successful, return it
+        return response;
       })
-    ))
+      .catch(() => {
+        // If network fails (offline or blocked), try to find it in cache
+        return caches.match(e.request).then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          // IMPORTANT: If it's not in cache and network failed,
+          // we must return a valid "Response" object or null
+          // Returning nothing/undefined causes the TypeError you saw.
+          return new Response("Network error occurred", {
+            status: 408,
+            headers: { "Content-Type": "text/plain" },
+          });
+        });
+      }),
   );
-  self.clients.claim();
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
-  );
-});
