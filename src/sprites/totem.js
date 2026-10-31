@@ -31,9 +31,13 @@ export default class Totem extends EngineObject3D {
     this.head = this.addChild(new EngineObject3D(vec3(-.05, 3.05, .5), this.masks[0]))
     this.setCollision(true, true);
 
+    this.targetY = .5;
+    this.pos3D.y = this.targetY - 5;
+
   }
 
   update() {
+    this.pos3D.y += (this.targetY - this.pos3D.y) * .05;
     const wave = sin(time * 2)
     this.velocity3D = vec3(0, 0, state.speed);
 

@@ -8,7 +8,6 @@ import {
   Color, BLACK, WHITE, rgb, hsl,
   drawText, drawTile, tile, PI, time
 } from 'littlejsengine';
-
 // Weather.js - a swappable weather / sky system for LittleJS 3D
 //
 // A "preset" (see weather/alienGreen.js) is plain data describing the sky,
@@ -143,8 +142,10 @@ export default class Weather {
     this.setupRain(preset.rain);
     this.setupScreenRain(preset.screenRain);
     this.setupMeteors(preset.meteors);
+    this.setupShips(preset.ships);
     this.onImpact = null;               // optional: weather.onImpact = (strength) => { ...shake the camera... }
     this.setupLightning(preset.lightning);
+
     this.hasTunnel = preset.tunnel;
     this.name = preset.name;
   }
@@ -215,7 +216,7 @@ export default class Weather {
 
   // ---- rain: one particle emitter above the road ---------------------------
   setupRain(rain) {
-    if (!rain || isTouchDevice) return;
+    if (!rain) return;
     this.rain = new ParticleEmitter3D(
       rain.position,                  // center of the spawn area
       rain.area,                      // size of the spawn area (vec3)
@@ -484,6 +485,167 @@ export default class Weather {
     render3D.additive = false;
   }
 
+  // ---- ships: craft that land on pads, wait, and take off again -----------
+  // The pads themselves are ordinary `sprites` in the preset; `ships.pads` lists the same
+  // positions so the ships know where to land. Each pad runs its own little cycle:
+  //   empty -> landing -> parked -> takeoff -> empty ...
+  // Preset `ships`:
+  //   paint, texWidth, texHeight   painter for the craft (side view, upright)
+  //   size           [width, height] of the craft in world units
+  //   pads           [{ pos: [x, y, z], lift }] the pad sprite's center, and how far above it
+  //                  the craft's center sits when parked (lift is in world units)
+  //   landTime, dwell, liftTime, cooldown   [min, max] seconds for each stage
+  //   approach       how far away and up a landing starts: { x, y, z } ranges as [min, max]
+  //   departure      where a takeoff ends, relative to the pad, same format
+  //   engineColor    color of the exhaust glow
+  //   lights         [colorA, colorB] blinking running lights on the rim
+  setupShips(config) {
+    this.pads = [];
+    if (!config) return;
+    this.shipTexture = makeTexture(config.paint, config.texWidth, config.texHeight);
+    this.pads = config.pads.map(pad => {
+      const state = { rest: vec3(pad.pos[0], pad.pos[1] + pad.lift, pad.pos[2] + .6), ship: null, t: 0 };
+      state.surfaceY = state.rest.y - config.size[1] * .5;       // where a parked craft's underside rests
+      if (Math.random() < .6)                                 // start with some craft already parked
+      {
+        state.state = 'parked';
+        state.wait = random(...config.dwell) * Math.random();
+        state.ship = this.newShip(state.rest);
+      }
+      else {
+        state.state = 'empty';
+        state.wait = random(.5, 4);
+      }
+      return state;
+    });
+  }
+
+  newShip(rest) {
+    const tints = [rgb(1, 1, 1), rgb(1, .88, .88), rgb(.88, 1, .92), rgb(.9, .92, 1)];
+    return {
+      pos: rest.copy(), alpha: 1, engine: .2, phase: random(0, 6.28),
+      tint: tints[Math.floor(Math.random() * tints.length)]
+    };
+  }
+
+  // an offset where each of x, y, z is picked from a [min, max] range
+  shipOffset(ranges) {
+    return vec3(random(...ranges.x), random(...ranges.y), random(...ranges.z));
+  }
+
+  startLanding(pad) {
+    const config = this.preset.ships;
+    pad.state = 'landing';
+    pad.t = 0;
+    pad.duration = random(...config.landTime);
+    pad.ship = this.newShip(pad.rest);
+    pad.from = pad.rest.add(this.shipOffset(config.approach));
+  }
+
+  startTakeoff(pad) {
+    const config = this.preset.ships;
+    pad.state = 'takeoff';
+    pad.t = 0;
+    pad.duration = random(...config.liftTime);
+    pad.to = pad.rest.add(this.shipOffset(config.departure));
+  }
+
+  updateShips(dt) {
+    const config = this.preset.ships;
+    if (!config) return;
+    const smooth = (x) => { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x); };
+
+    for (const pad of this.pads) {
+      pad.t += dt;
+      const ship = pad.ship;
+
+      if (pad.state === 'empty') {
+        pad.wait -= dt;
+        if (pad.wait <= 0) this.startLanding(pad);
+      }
+      else if (pad.state === 'landing') {
+        const p = Math.min(1, pad.t / pad.duration);
+        const e = 1 - Math.pow(1 - p, 3);                           // slows down as it arrives
+        ship.pos = pad.from.add(pad.rest.subtract(pad.from).scale(e));
+        ship.pos.x += Math.sin(p * 9) * (1 - p) * 1.2;              // a little sway
+        ship.alpha = Math.min(1, p / .15);
+        ship.engine = p < .8 ? 1 : 1 - (p - .8) / .2 * .8;          // throttles down at touchdown
+        if (p >= 1) {
+          pad.state = 'parked';
+          pad.wait = random(...config.dwell);
+          ship.pos = pad.rest.copy();
+        }
+      }
+      else if (pad.state === 'parked') {
+        ship.engine = .2 + .05 * Math.sin(this.time * 3 + ship.phase);
+        pad.wait -= dt;
+        if (pad.wait <= 0) this.startTakeoff(pad);
+      }
+      else if (pad.state === 'takeoff') {
+        const p = Math.min(1, pad.t / pad.duration);
+        const lift = Math.pow(p, 2.2);                              // starts slowly, speeds up
+        const drift = smooth((p - .25) / .75);                      // sideways and away only once it is up
+        ship.pos = vec3(pad.rest.x + (pad.to.x - pad.rest.x) * drift,
+          pad.rest.y + (pad.to.y - pad.rest.y) * lift,
+          pad.rest.z + (pad.to.z - pad.rest.z) * drift);
+        ship.engine = Math.min(1, .3 + p * 3);
+        ship.alpha = 1 - smooth((p - .7) / .3);                     // fades out in the distance
+        if (p >= 1) {
+          pad.state = 'empty';
+          pad.wait = random(...config.cooldown);
+          pad.ship = null;
+        }
+      }
+    }
+  }
+
+  drawShips() {
+    const config = this.preset.ships;
+    if (!config) return;
+    const [width, height] = config.size;
+
+    for (const pad of this.pads) {
+      const ship = pad.ship;
+      if (!ship || ship.alpha <= 0) continue;
+      const { pos, alpha, engine } = ship;
+      const moving = pad.state === 'landing' || pad.state === 'takeoff';
+
+      // the craft: bobs a little and rolls slightly
+      const bob = pad.state === 'parked' ? 0 : Math.sin(this.time * 2 + ship.phase) * .25;
+      const tint = ship.tint;
+      render3D.drawBillboard(vec3(pos.x, pos.y + bob, pos.z), vec2(width, height), this.shipTexture,
+        rgb(tint.r, tint.g, tint.b, alpha), moving ? Math.sin(this.time * 1.5 + ship.phase) * .04 : 0);
+
+      // everything below glows, so it adds to the scene
+      render3D.additive = true;
+      const under = vec3(pos.x, pos.y + bob - height * .42, pos.z + .1);
+      const flame = config.engineColor;
+
+      // a landing beam from the pad up to the craft while it moves
+      if (moving) {
+        const beamAlpha = alpha * .18;
+        render3D.drawRibbon([pad.rest.add(vec3(0, -height * .4, 0)), under], width * .55, undefined,
+          rgb(flame.r, flame.g, flame.b, beamAlpha));
+      }
+      // exhaust: a column that gets longer and brighter with the engine, and a glow where it starts
+      let length = height * (.4 + 2.6 * engine);
+      if (Math.abs(pos.x - pad.rest.x) < width * .8)              // above its pad: the exhaust stops at the pad
+        length = Math.min(length, Math.max(0, under.y - pad.surfaceY));
+      render3D.drawRibbon([under, under.add(vec3(0, -length, 0))], width * .3 * (.4 + .6 * engine), undefined,
+        rgb(flame.r, flame.g, flame.b, alpha * engine * .35));
+      render3D.drawBillboard(under, vec2(width * (.7 + .8 * engine)), this.glowTexture,
+        rgb(flame.r, flame.g, flame.b, alpha * (.3 + .6 * engine)));
+
+      // blinking running lights on the rim
+      const blink = .5 + .5 * Math.sin(this.time * 6 + ship.phase);
+      const a = config.lights[0], b = config.lights[1];
+      const rimY = pos.y + bob - height * .08;
+      render3D.drawBillboard(vec3(pos.x - width * .42, rimY, pos.z + .1), vec2(width * .22), this.glowTexture, rgb(a.r, a.g, a.b, alpha * blink));
+      render3D.drawBillboard(vec3(pos.x + width * .42, rimY, pos.z + .1), vec2(width * .22), this.glowTexture, rgb(b.r, b.g, b.b, alpha * (1 - blink)));
+      render3D.additive = false;
+    }
+  }
+
   // ---- lightning -----------------------------------------------------------
   setupLightning(lightning) {
     this.bolt = [];                     // list of { points, width }
@@ -539,6 +701,7 @@ export default class Weather {
     this.time += dt;
     this.updateScreenRain(dt);
     this.updateMeteors(dt);
+    this.updateShips(dt);
 
     if (lightning) {
       this.timeToNextBolt -= dt;
@@ -551,7 +714,8 @@ export default class Weather {
 
       if (this.thunderDelay >= 0) {
         this.thunderDelay -= dt;
-        // if (this.thunderDelay < 0) zzfx(...lightning.thunder);
+        // if (this.thunderDelay < 0)
+        // zzfx(...lightning.thunder);
 
       }
 
@@ -609,6 +773,7 @@ export default class Weather {
     }
 
     this.drawMeteors();
+    this.drawShips();
 
     render3D.blend = false;
   }
@@ -653,6 +818,7 @@ export default class Weather {
     this.meteors = [];
     this.impacts = [];
     this.booms = [];
+    this.pads = [];
     this.bolt = [];
     this.impactFlash = this.flash = 0;
     this.onImpact = null;

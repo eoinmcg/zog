@@ -14,7 +14,7 @@ import spawnWave from '../helpers/spawnWave';
 
 
 export default {
-  obstacle() { new Obstacle(vec3(rand(-14, 14), -5, -300)); },
+  obstacle() { new Obstacle(vec3(rand(-14, 14), -5, -200)); },
   crate() { new Crate(); },
   crawler() { new Crawler(); },
   coins() { spawnCoins(); },

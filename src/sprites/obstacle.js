@@ -1,18 +1,19 @@
 import {
-  EngineObject3D, buildCylinder,
+  EngineObject3D, buildCylinder, buildCone,
   createCanvasContext, TextureInfo, vec3,
-  randInt, randSign, PI, hsl, tile, Color,
+  randInt, randSign, PI, hsl, tile,
 } from 'littlejsengine'
 
 import config from '../data/config';
 import state from '../data/state';
-import { boom } from '../helpers/particles';
+import { boom, spark } from '../helpers/particles';
 
 export default class Obstacle extends EngineObject3D {
   constructor(pos3D, size = 1, long = 1) {
 
     let texture,
       p = config.palette,
+      shape,
       col = p.white.col
 
     const settings = state.level.obstacles
@@ -23,10 +24,15 @@ export default class Obstacle extends EngineObject3D {
     }
     if (settings?.col) {
       col = p[settings.col].col
-      console.log(col, settings.col)
     }
 
-    super(pos3D, buildCylinder(1, 1), texture, col);
+    if (settings?.shape === 'spike') {
+      shape = buildCone(1, 1)
+    } else {
+      shape = buildCylinder(1, 1)
+    }
+
+    super(pos3D, shape, texture, col);
     this.scale3D = vec3(size * (10 * long), size * 2, size);
     this.size3D = vec3(size);      // matches scale3D so collision matches how it looks
     this.setCollision(true, true); // takes part in solid collision, and blocks
@@ -34,7 +40,6 @@ export default class Obstacle extends EngineObject3D {
     this.castShadow = true
     this.velocity3D = vec3(0, 0, state.speed);
     this.name = 'obstacle'
-
 
     switch (randInt(3)) {
       case 0: this.rotation3D.z = 0; break;
@@ -46,13 +51,13 @@ export default class Obstacle extends EngineObject3D {
       this.rotation3D.z = PI * .5;
     }
 
+    this.targetY = .5;
+    this.pos3D.y = this.targetY - 5;
   }
 
   update() {
 
-    if (this.pos3D.y < .5) {
-      this.pos3D.y += .1
-    }
+    this.pos3D.y += (this.targetY - this.pos3D.y) * .05;
     this.velocity3D = vec3(0, 0, state.speed);
     // this.rotation3D.z += .01
     super.update()
@@ -72,7 +77,7 @@ export default class Obstacle extends EngineObject3D {
       o.loseLive(this);
     }
     // this.destroy()
-    boom(o.pos3D.add(vec3(0, 0, 3)))
+    spark(o.pos3D.add(vec3(0, 0, 3)))
     config.sfx.play('blip')
   }
 }

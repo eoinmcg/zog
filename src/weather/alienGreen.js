@@ -185,7 +185,7 @@ export default
     },
 
     // Distant things fade into the horizon color between start and end.
-    fog: { start: 45, end: 420 },
+    // fog: { start: 180, end: 420 },
 
     sun:
     {
@@ -223,7 +223,7 @@ export default
         //   paint: painters.tiles(() => [tile(0, 16, 1), tile(0, 16, 1), tile(0, 16, 1)], { scale: 2, spacing: [20, 40] }),
         //   texWidth: 1024, texHeight: 256, z: -200, y: rand(42, 52), w: 240, h: 60, scroll: 0, tint: [1, 1, 1, 1]
         // },
-        { paint: floatingIslands, texWidth: 1024, texHeight: 256, z: -210, y: 52, w: 330, h: 82, scroll: 1.2, tint: [1, 1, 1, 1] },
+        { paint: floatingIslands, texWidth: 1024, texHeight: 256, z: 210, y: 52, w: 330, h: 82, scroll: 1.2, tint: [1, 1, 1, 1] },
         { paint: crystalRidge, texWidth: 1024, texHeight: 256, z: -250, y: 34, w: 320, h: 80, scroll: .3, tint: [1, 1, 1, 1] },
         { paint: spireCity, texWidth: 1024, texHeight: 256, z: -170, y: 19, w: 200, h: 50, scroll: 0, tint: [1, 1, 1, 1] },
         { paint: painters.clouds('rgba(15,60,90,', 40), texWidth: 1024, texHeight: 256, z: -230, y: 38, w: 420, h: 105, scroll: 3, tint: [.9, .8, 1, .95] },

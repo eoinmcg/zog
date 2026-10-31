@@ -141,21 +141,22 @@ export default class Play extends Scene {
     this.updateCamera();
 
     if (state.level.completed >= state.level.distance
-      && !state.level?.portal === false
       && !state.level.isFinished) {
-      state.level.isFinished = true
-      playMusic(1, false)
-      this.portal = new Portal()
-    }
 
-    if (state.level.completed >= state.level.distance
-      && !state.level?.portal === true
-      && !state.level.isFinished) {
-      state.level.isFinished = true
-      state.level.speed = 0
-      state.speed = 0
-      stopMusic()
-      new Alert({ text: 'BOSS TIME', col: 'grass' })
+      state.level.isFinished = true;
+
+      if (state.level.portal === false) {
+        // Boss level
+        state.level.speed = 0;
+        state.speed = 0;
+        stopMusic();
+        new Alert({ text: 'BOSS TIME', col: 'grass' });
+
+      } else {
+        // Normal level
+        playMusic(1, false);
+        this.portal = new Portal();
+      }
     }
   }
 
@@ -249,6 +250,7 @@ export default class Play extends Scene {
   }
 
   handlePauseInput() {
+    if (state.hitStop) return
     const pausePressed = keyWasPressed('KeyP') || gamepadWasPressed(9);
 
     const pauseClicked =

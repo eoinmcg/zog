@@ -10,6 +10,7 @@ import darkTunnel from '../weather/darkTunnel';
 import mushroomTrip from '../weather/mushroomTrip';
 import meteorShower from '../weather/meteorShower';
 import deepSpace from '../weather/deepSpace';
+import spacePort from '../weather/spacePort';
 
 import Grass from "../sprites/grass";
 import config from './config';
@@ -21,7 +22,8 @@ const bgs = [
   mushroomTrip,
   meteorShower,
   redDesert,
-  deepSpace
+  deepSpace,
+  spacePort
 ]
 
 // @note: level.phases: start & end are % of distance
@@ -103,14 +105,15 @@ export default [
     ],
     obstacles: {
       col: 'white',
-      tile: 31
+      tile: 31,
+      shape: 'spike'
     }
   },
   {
     title: 'SPACE PORT',
     speed: .7,
     distance: 10,
-    weather: bgs[6],
+    weather: bgs[7],
     music: 6,
     groundCol: new Color(.4, .3, .4),
     portal: false,

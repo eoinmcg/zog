@@ -10,7 +10,7 @@ export default class Bat extends Baddie {
     super(pos, {
       // animFrames: [43, 44],
       animFrames: [45, 46, 47],
-      animSpeed: 5,
+      animSpeed: 3,
       health: 0,
       value: 10,
       type: 'skull',
