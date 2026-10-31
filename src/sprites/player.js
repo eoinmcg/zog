@@ -262,6 +262,7 @@ export default class Player extends EngineObject3D {
     this.recover = 2
     config.sfx.play('hurt')
     state.shake = 1
+    // if (this.hat && rand() > .5) this.hat.flyOff(vec3(.05, .5, .04));
 
     if (state.lives < 0) {
       this.destroy(o)

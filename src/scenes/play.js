@@ -140,12 +140,22 @@ export default class Play extends Scene {
     }
     this.updateCamera();
 
-    if (state.level.completed >= state.level.distance && !state.level.isFinished) {
+    if (state.level.completed >= state.level.distance
+      && !state.level?.portal === false
+      && !state.level.isFinished) {
       state.level.isFinished = true
       playMusic(1, false)
       this.portal = new Portal()
-      console.log('NEW PORTAL', this.portal)
-      window.portal = this.portal
+    }
+
+    if (state.level.completed >= state.level.distance
+      && !state.level?.portal === true
+      && !state.level.isFinished) {
+      state.level.isFinished = true
+      state.level.speed = 0
+      state.speed = 0
+      stopMusic()
+      new Alert({ text: 'BOSS TIME', col: 'grass' })
     }
   }
 

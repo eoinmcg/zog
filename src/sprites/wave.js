@@ -18,11 +18,11 @@ export default class Wave extends Baddie {
     }
 
     super(path[0].pos.copy(), {
-      animFrames: [28, 29],
-      animSpeed: 0,
+      animFrames: [48, 49, 50, 51],
+      animSpeed: 10,
       health: 0,
       value: 10,
-      type: 'skull',
+      type: 'drone',
       extrudeBy: .1,
       scale: vec3(2),
     });
@@ -64,6 +64,10 @@ export default class Wave extends Baddie {
     this.pos3D = this.stepStart.add(
       direction.scale(eased)
     );
+
+    if (this.pos3D.y < 1) {
+      this.pos3D.y = 1
+    }
 
     if (this.pos3D.y < 0) this.pos3D.y = 0
 

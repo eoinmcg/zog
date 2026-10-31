@@ -10,7 +10,7 @@ import state from '../data/state';
 export default class Totem extends EngineObject3D {
   constructor(pos) {
 
-    pos = pos || vec3(rand(-8, 8), 2, -100);
+    pos = pos || vec3(rand(-12, 12), 2, -100);
     const shape = buildBox(vec3(1, 7, 1));
     const texture = tile(31, config.tileSize)
     const col = config.palette.plum.col;
@@ -26,7 +26,7 @@ export default class Totem extends EngineObject3D {
     // const frames = [60, 61]
     // const frames = [28, 29]
     // const frames = [60]
-    const frames = [28]
+    const frames = [53]
     this.masks = frames.map(i => buildExtrude(tile(i, config.tileSize), vec2(1.4), .1))
     this.head = this.addChild(new EngineObject3D(vec3(-.05, 3.05, .5), this.masks[0]))
     this.setCollision(true, true);

@@ -3,6 +3,7 @@ import {
 } from 'littlejsengine';
 
 import Baddie from './baddie';
+import config from '../data/config';
 import state from '../data/state';
 import { fire, spark } from '../helpers/particles';
 
@@ -46,6 +47,7 @@ export default class Meteor extends Baddie {
         this.hasCrashed = true
         state.shake = .5
         console.log('CRASH')
+        config.sfx.play('explosion')
         spark(this.pos3D);
       }
     }
@@ -54,6 +56,10 @@ export default class Meteor extends Baddie {
     this.rotation3D.z += .1
 
 
+    if (!this.hasCrashed && (this.pos3D.z < 6 && this.pos3D.z > 4)) {
+      config.sfx.play('jet')
+    }
+
     // Call parent update for boundary checks / destruction logic
     super.update();
 
@@ -61,9 +67,9 @@ export default class Meteor extends Baddie {
     // if (!this.hasCrashed) {
     fire(this.pos3D);
     // }
-    if (!this.hasCrashed) {
-      spark(this.pos3D.add(vec3(0, 1, 0)));
-      state.shake = .5
-    }
+    // if (!this.hasCrashed) {
+    //   spark(this.pos3D.add(vec3(0, 1, 0)));
+    //   state.shake = .5
+    // }
   }
 }

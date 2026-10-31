@@ -22,7 +22,7 @@ export default class Grass extends EngineObject3D {
     const s = rand(.6, 2);
     this.scale3D = vec3(s);
     this.color = this.groundColor.scale(rand(.7, .9), 1); // rgb darker, alpha stays 1
-    const x = (Grass.laneHalf + rand(0, 10)) * randSign();
+    const x = (Grass.laneHalf + rand(0, 24)) * randSign();
     const z = randomZ ? rand(Grass.spawnZ, render3D.camera.pos.z)
       : Grass.spawnZ - rand(0, 20); // stagger so they don't arrive in a line
     this.pos3D = vec3(x, 0, z); // sits on the ground if the mesh is centered
