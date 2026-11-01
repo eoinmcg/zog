@@ -17,7 +17,7 @@ export default class Laser extends EngineObject3D {
     this.lookAt(target);                // points -Z at the target, the box is the same both ways
     this.velocity3D = target.subtract(from).normalize(-5); // 3 units per frame
     this.spawnTime = time;
-    this.collideAsSphere3D = true;
+    // this.collideAsSphere3D = true;
     this.setCollision();
     this.name = 'laser'
     config.sfx.play('laser')

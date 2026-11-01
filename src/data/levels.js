@@ -112,8 +112,8 @@ export default [
   {
     title: 'SPACE PORT',
     speed: .7,
-    distance: 10,
-    weather: bgs[7],
+    distance: 3,
+    weather: bgs[6],
     music: 6,
     groundCol: new Color(.4, .3, .4),
     portal: false,
@@ -130,10 +130,15 @@ export default [
 
     },
     phases: [
-      { start: 3, end: 55, types: ['crawler'], freq: [1, 2] },
-      { start: 0, end: 55, types: ['obstacle'], freq: [.5, 1] },
+      { start: 0, end: 30, types: ['seeker'], freq: [2, 4] },
+      { start: 0, end: 55, types: ['obstacle.flat'], freq: [.5, 1] },
       { start: 0, end: 75, types: ['coins'], freq: [5, 8] },
+      { start: 0, end: 75, types: ['wave.left', 'wave.right', 'wave.center'], freq: [3, 5] },
     ],
+    obstacles: {
+      col: 'yellow',
+      tile: 30
+    }
   },
 ]
 

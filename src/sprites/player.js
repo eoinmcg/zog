@@ -116,7 +116,6 @@ export default class Player extends EngineObject3D {
         gamepadWasPressed(1) ||
         gamepadWasPressed(13) ||
         gamepadWasPressed(14) ||
-        gamepadWasPressed(5) ||
         gamepadWasPressed(7)
       ));
 
@@ -130,6 +129,7 @@ export default class Player extends EngineObject3D {
         gamepadWasPressed(0) ||
         gamepadWasPressed(12) ||
         gamepadWasPressed(15) ||
+        gamepadWasPressed(5) ||
         gamepadWasPressed(4) ||
         gamepadWasPressed(6)
       ));

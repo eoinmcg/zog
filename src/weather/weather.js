@@ -622,11 +622,11 @@ export default class Weather {
       const flame = config.engineColor;
 
       // a landing beam from the pad up to the craft while it moves
-      if (moving) {
-        const beamAlpha = alpha * .18;
-        render3D.drawRibbon([pad.rest.add(vec3(0, -height * .4, 0)), under], width * .55, undefined,
-          rgb(flame.r, flame.g, flame.b, beamAlpha));
-      }
+      // if (moving) {
+      //   const beamAlpha = alpha * .18;
+      //   render3D.drawRibbon([pad.rest.add(vec3(0, -height * .4, 0)), under], width * .55, undefined,
+      //     rgb(flame.r, flame.g, flame.b, beamAlpha));
+      // }
       // exhaust: a column that gets longer and brighter with the engine, and a glow where it starts
       let length = height * (.4 + 2.6 * engine);
       if (Math.abs(pos.x - pad.rest.x) < width * .8)              // above its pad: the exhaust stops at the pad

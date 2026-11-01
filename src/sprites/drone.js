@@ -1,7 +1,9 @@
 import {
-  vec3,
+  vec3, Light3D, WHITE,
 } from 'littlejsengine';
+
 import Baddie from './baddie';
+import config from '../data/config';
 
 export default class Drone extends Baddie {
   constructor(pos) {
@@ -13,5 +15,7 @@ export default class Drone extends Baddie {
       type: 'drone',
       scale: vec3(2)
     });
+    this.emissive = 1
+    this.addChild(new Light3D(vec3(), 10, WHITE));
   }
 }

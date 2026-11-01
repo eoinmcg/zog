@@ -208,7 +208,7 @@ export default
     ships:
     {
       paint: ufo, texWidth: 256, texHeight: 128,
-      size: [11, 5.5],
+      size: [8, 5],
       pads: pads.map(pos => ({ pos, lift: 3.8 })),            // 3.8 = how far above a pad's center a parked craft sits
 
       landTime: [5, 7],                                       // seconds, each stage
@@ -217,10 +217,10 @@ export default
       cooldown: [2, 8],
 
       // a landing starts this far from the pad (x, y, z ranges), and a takeoff ends this far
-      approach: { x: [-60, 60], y: [60, 100], z: [-90, -30] },
-      departure: { x: [-50, 50], y: [70, 110], z: [-100, -40] },
+      approach: { x: [-60, 60], y: [60, 100], z: [-190, -130] },
+      departure: { x: [-50, 50], y: [70, 110], z: [-100, -140] },
 
       engineColor: rgb(.5, .9, 1),
-      lights: [rgb(1, .3, .0), rgb(.3, 1, .0)],
+      lights: [rgb(1, .3, .5), rgb(.3, 1, .5)],
     },
   };

@@ -24,7 +24,7 @@ export default class Wave extends Baddie {
       value: 10,
       type: 'drone',
       extrudeBy: .1,
-      scale: vec3(2),
+      scale: vec3(1.5),
     });
 
     this.waveId = waveId;

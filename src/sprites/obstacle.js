@@ -9,7 +9,7 @@ import state from '../data/state';
 import { boom, spark } from '../helpers/particles';
 
 export default class Obstacle extends EngineObject3D {
-  constructor(pos3D, size = 1, long = 1) {
+  constructor(pos3D, size = 1, long = 1, angles = 3) {
 
     let texture,
       p = config.palette,
@@ -41,7 +41,7 @@ export default class Obstacle extends EngineObject3D {
     this.velocity3D = vec3(0, 0, state.speed);
     this.name = 'obstacle'
 
-    switch (randInt(3)) {
+    switch (randInt(angles)) {
       case 0: this.rotation3D.z = 0; break;
       case 1: this.rotation3D.z = PI * .25 * randSign(); break;
       case 2: this.rotation3D.z = PI * .5; break;
@@ -76,6 +76,12 @@ export default class Obstacle extends EngineObject3D {
     if (o.name === 'player') {
       o.loseLive(this);
     }
+
+    if (o.name === 'laser') {
+      o.destroy(false);
+      // return
+    }
+
     // this.destroy()
     spark(o.pos3D.add(vec3(0, 0, 3)))
     config.sfx.play('blip')

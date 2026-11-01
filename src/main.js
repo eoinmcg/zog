@@ -87,6 +87,7 @@ const params = Object.fromEntries(new URLSearchParams(location.search));
 if (params.l) {
   config.startScene = "Play";
   state.currentLevel = parseInt(params.l, 10)
+  state.equipment.raygun.owned = true
   console.log('LEVEL', config.levelNum)
 }
 if (params.s) {

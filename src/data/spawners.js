@@ -32,6 +32,10 @@ export default {
   'obstacle.long': () => {
     new Obstacle(vec3(rand(-10, 10), -5, -300), 1, 3);
   },
+  'obstacle.flat': () => {
+    new Obstacle(vec3(rand(-10, 10), -5, -300), 1, 1, 1);
+  },
+
   'wave.left': () => spawnWave('left'),
   'wave.right': () => spawnWave('right'),
   'wave.center': () => spawnWave('center'),

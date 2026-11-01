@@ -181,7 +181,7 @@ export default
       top: hsl(.5, .95, .24),     // deep teal
       horizon: hsl(.3, .95, .52),     // toxic green (fog takes this color too)
       bottom: hsl(.8, .8, .35),      // purple, seen below the horizon
-      ambient: 1.4,
+      ambient: 1.2,
     },
 
     // Distant things fade into the horizon color between start and end.

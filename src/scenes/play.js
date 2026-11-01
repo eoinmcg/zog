@@ -20,6 +20,7 @@ import { setItem } from '../helpers/store';
 import Alert from '../sprites/alert';
 import Player from '../sprites/player';
 import Portal from '../sprites/portal';
+import Boss from '../sprites/boss';
 import Scene from './scene';
 
 import { updateLevelPhases } from '../helpers/updateLevelPhases';
@@ -151,6 +152,7 @@ export default class Play extends Scene {
         state.speed = 0;
         stopMusic();
         new Alert({ text: 'BOSS TIME', col: 'grass' });
+        this.boss = new Boss()
 
       } else {
         // Normal level
