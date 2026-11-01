@@ -99,10 +99,10 @@ export default [
     setUp() { makeGround(this.groundCol) },
     phases: [
       { start: 3, end: 95, types: ['crawler'], freq: [1, 2] },
-      { start: 0, end: 95, types: ['obstacle'], freq: [.5, 1] },
+      { start: 0, end: 95, types: ['obstacle'], freq: [.3, .8] },
       { start: 0, end: 95, types: ['coins'], freq: [5, 8] },
       // { start: 20, end: 95, types: ['wave.left', 'wave.right', 'wave.center'], freq: [3, 5] },
-      { start: 20, end: 95, types: ['skull'], freq: [3, 5] },
+      { start: 20, end: 95, types: ['skull'], freq: [1, 2] },
 
     ],
     obstacles: {

@@ -26,26 +26,29 @@ export default class Obstacle extends EngineObject3D {
       col = p[settings.col].col
     }
 
+    let zRot;
     if (settings?.shape === 'spike') {
       shape = buildCone(1, 1)
+      zRot = PI * .5 * randSign();
     } else {
       shape = buildCylinder(1, 1)
+      switch (randInt(angles)) {
+        case 0: zRot = 0; break;
+        case 1: zRot = PI * .25 * randSign(); break;
+        case 2: zRot = PI * .5; break;
+      }
     }
 
     super(pos3D, shape, texture, col);
     this.scale3D = vec3(size * (10 * long), size * 2, size);
     this.size3D = vec3(size);      // matches scale3D so collision matches how it looks
     this.setCollision(true, true); // takes part in solid collision, and blocks
+    this.rotation3D.z = zRot
 
     this.castShadow = true
     this.velocity3D = vec3(0, 0, state.speed);
     this.name = 'obstacle'
 
-    switch (randInt(angles)) {
-      case 0: this.rotation3D.z = 0; break;
-      case 1: this.rotation3D.z = PI * .25 * randSign(); break;
-      case 2: this.rotation3D.z = PI * .5; break;
-    }
 
     if (config.weather && config.weather.name === 'darkTunnel' && this.rotation3D.z === 0) {
       this.rotation3D.z = PI * .5;

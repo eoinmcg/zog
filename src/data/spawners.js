@@ -12,9 +12,11 @@ import Bat from '../sprites/bat';
 import spawnCoins from '../helpers/spawnCoins';
 import spawnWave from '../helpers/spawnWave';
 
+const MAX_X = 14
+
 
 export default {
-  obstacle() { new Obstacle(vec3(rand(-14, 14), -5, -200)); },
+  obstacle() { new Obstacle(vec3(rand(-MAX_X, MAX_X), -5, -200)); },
   crate() { new Crate(); },
   crawler() { new Crawler(); },
   coins() { spawnCoins(); },
@@ -30,10 +32,10 @@ export default {
   },
 
   'obstacle.long': () => {
-    new Obstacle(vec3(rand(-10, 10), -5, -300), 1, 3);
+    new Obstacle(vec3(rand(-MAX_X, MAX_X), -5, -300), 1, 3);
   },
   'obstacle.flat': () => {
-    new Obstacle(vec3(rand(-10, 10), -5, -300), 1, 1, 1);
+    new Obstacle(vec3(rand(-MAX_X, MAX_X), -5, -300), 1, 1, 1);
   },
 
   'wave.left': () => spawnWave('left'),
