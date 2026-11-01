@@ -15,6 +15,7 @@ import spacePort from '../weather/spacePort';
 import Boss from '../sprites/boss';
 import Grass from "../sprites/grass";
 import config from './config';
+import state from './state';
 
 const bgs = [
   alienGreen,
@@ -119,12 +120,7 @@ export default [
     groundCol: new Color(.4, .3, .4),
     setUp() {
       makeGround(this.groundCol)
-      this.ufo = new EngineObject3D(
-        vec3(6, 10, -200),
-        config.models.ufo.mesh,
-        null,
-        // config.palette.grass.col
-      );
+      this.ufo = new EngineObject3D(vec3(6, 10, -200), config.models.ufo.mesh);
       this.ufo.rotation3D.x = -PI * .5
       this.ufo.scale3D = vec3(20);
 
@@ -148,17 +144,15 @@ export default [
     music: 6,
     groundCol: new Color(.4, .3, .4),
     portal: false,
+    boss: true,
     setUp() {
       makeGround(this.groundCol)
-      this.ufo = new EngineObject3D(
-        vec3(6, 10, -200),
-        config.models.ufo.mesh,
-        null,
-        // config.palette.grass.col
-      );
+      this.ufo = new EngineObject3D(vec3(6, 10, -200), config.models.ufo.mesh);
       this.ufo.rotation3D.x = -PI * .5
       this.ufo.scale3D = vec3(20);
-
+      state.events.add(2, () => {
+        new Boss()
+      })
     },
     phases: [
     ],
@@ -170,6 +164,4 @@ function makeGround(col, grassNum = 50, grassTile = 0) {
   for (let i = grassNum; i--;) {
     new Grass(true, col, grassTile)
   }
-  new Boss()
-
 }

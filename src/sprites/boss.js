@@ -1,10 +1,10 @@
 import {
-  EngineObject3D, Light3D, tile, vec3,
-  buildCylinder,buildBox,
+  EngineObject3D, Light3D, tile, vec3, vec2,
+  buildCylinder, buildBox, buildExtrude,
   hsl, WHITE, clamp, rand,
 } from 'littlejsengine';
 
-import { spark, boom } from '../helpers/particles';
+import { spark, boom, bossEntry } from '../helpers/particles';
 import state from '../data/state';
 import config from '../data/config';
 import Shockwave from './shockwave';
@@ -13,32 +13,27 @@ import BossFire from './bossfire';
 const HOME_Z = -50;
 const RUSH_END_Z = 7;
 const MAX_X = 6;
-// Register retro_scifi_boss_16x16.png as texture #1 in your LittleJS texture list.
-// Change this number if your game loads the boss texture in a different slot.
-const BOSS_TEXTURE = 0;
-const BOSS_FRAME_SIZE = 8;
 const BOSS_FRAMES = {
-  // idle: [0, 1],
-  // telegraph: [2, 3],
-  // rush: [4, 5],
-  // hit: [6],
-  // powered: [7],
-  idle: [64,65],
-  telegraph: [66],
-  rush: [67],
-  hit: [68],
-  powered: [66],
+  idle: [0, 1],
+  telegraph: [2],
+  rush: [3],
+  hit: [4],
+  powered: [2],
 };
+
 
 export default class Boss extends EngineObject3D {
   constructor() {
-    // No mesh + TileInfo = camera-facing billboard in LittleJS Render3D.
-    super(vec3(0, 5, HOME_Z), undefined, tile(0, BOSS_FRAME_SIZE, BOSS_TEXTURE));
+    const frameIndices = [64, 65, 66, 67, 68]
+    const frames = frameIndices.map(i => buildExtrude(tile(i, config.tileSize), vec2(5), .5));
+    const pos = vec3(0, 5, HOME_Z)
+    super(pos, frames[0])
 
+    this.frames = frames;
     this.name = 'enemy';
     this.type = 'boss';
     // Billboard width/height in world units; Z is used for collision only.
-    this.size3D = vec3(5, 5, 2);
+    // this.size3D = vec3(5, 5, 2);
     this.animTick = 0;
     this.currentFrame = -1;
     this.upright = true;
@@ -62,6 +57,16 @@ export default class Boss extends EngineObject3D {
     this.volleyIndex = 0;
     this.rushX = 0;
     this.velocity3D = vec3(.1, 0, 0);
+
+    state.shake = 1;
+    for (let i = 0; i < 10; i++) {
+      const p = pos.copy().add(vec3(
+        rand(-4, 4),
+        rand(-3, 3),
+        rand(-2, 2)
+      ));
+      state.events.add(i * .05, () => bossEntry(p));
+    }
 
     this.hoverDisc = new HoverDisc();
     this.addChild(this.hoverDisc);
@@ -115,8 +120,7 @@ export default class Boss extends EngineObject3D {
 
     const frame = frames[Math.floor(this.animTick / interval) % frames.length];
     if (frame !== this.currentFrame) {
-      this.currentFrame = frame;
-      this.tileInfo = tile(frame, BOSS_FRAME_SIZE, BOSS_TEXTURE);
+      this.mesh = this.frames[frame]
     }
   }
 
@@ -215,12 +219,13 @@ export default class Boss extends EngineObject3D {
   fire(index = 0) {
     const count = 5;
     const gap = index % count;
-    const origin = this.pos3D.copy().add(vec3(0, 0, 5));
+    const origin = this.pos3D.copy().add(vec3(0, 0, rand(0, 5)));
     for (let i = 0; i < count; i++) {
       // Rotating safe gap in each volley.
       if (i === gap) continue;
       new BossFire(origin.copy(), (i - 2) * .18, 0, .8 + index * .04);
     }
+
   }
 
   collideWithObject(o) {

@@ -3,7 +3,7 @@ import config from '../data/config';
 import { spark } from '../helpers/particles';
 
 export default class BossFire extends EngineObject3D {
-  constructor(pos3D, velocityX = 0, velocityY = 0, speedZ = .8) {
+  constructor(pos3D, velocityX = 0, velocityY = 0, speedZ = .5) {
     const col = config.palette.grass.col;
     super(pos3D, buildExtrude(tile(38, config.tileSize), vec2(1), .2), undefined, col);
 
@@ -30,7 +30,7 @@ export default class BossFire extends EngineObject3D {
     this.rotation3D.z += .08;
     if (this.age % 6 === 0 && rand() > .35) spark(this.pos3D.copy());
     if (this.pos3D.z > 12 || this.age > 150) this.destroy();
-  
+
     const pulse = (Math.sin(time * 8 + this.pulseOffset) + 1) / 2;
     this.color = this.baseColor.lerp(this.pulseColor, pulse);
 

@@ -1,4 +1,4 @@
-import { ParticleEmitter3D, PI, tile, hsl } from "littlejsengine";
+import { ParticleEmitter3D, PI, tile, hsl, vec3 } from "littlejsengine";
 import config from "../data/config";
 
 export function spark(pos) {
@@ -113,4 +113,32 @@ export function portalParticles(pos) {
   );
 
   emitter.trailTime = .1;
+}
+
+
+export function bossEntry(pos) {
+  new ParticleEmitter3D(
+    pos.copy(),
+    vec3(2, 2, 2), // Spawn area
+    .12,            // Emit duration (seconds)
+    450,            // Particles per second
+    PI,             // All directions
+    undefined,      // Default particle texture
+
+    hsl(.30, 1, .55), // Grass green
+    hsl(.15, 1, .6),  // Yellow
+
+    hsl(.30, 1, .3, 0), // Fade green to transparent
+    hsl(.15, 1, .3, 0), // Fade yellow to transparent
+
+    .65,  // Particle lifetime
+    .8,   // Initial size
+    .05,  // Final size
+    .35,  // Speed
+    .94,  // Damping
+    0,    // Gravity
+    .1,   // Fade rate
+    .5,   // Randomness
+    true  // Additive blending
+  );
 }

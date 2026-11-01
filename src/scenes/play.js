@@ -20,7 +20,6 @@ import { setItem } from '../helpers/store';
 import Alert from '../sprites/alert';
 import Player from '../sprites/player';
 import Portal from '../sprites/portal';
-import Boss from '../sprites/boss';
 import Scene from './scene';
 
 import { updateLevelPhases } from '../helpers/updateLevelPhases';
@@ -146,16 +145,7 @@ export default class Play extends Scene {
 
       state.level.isFinished = true;
 
-      if (state.level.portal === false) {
-        // Boss level
-        state.level.speed = 0;
-        state.speed = 0;
-        stopMusic();
-        new Alert({ text: 'BOSS TIME', col: 'grass' });
-        this.boss = new Boss()
-
-      } else {
-        // Normal level
+      if (state.level.portal !== false) {
         playMusic(1, false);
         this.portal = new Portal();
       }
@@ -417,7 +407,7 @@ export default class Play extends Scene {
 
   renderProgress() {
     const progress = clamp(state.level.completed / state.level.distance, 0, 1);
-    if (!progress) return
+    if (!progress || state.level.boss) return
 
     const barWidth = 24;
     const barHeight = .5;
