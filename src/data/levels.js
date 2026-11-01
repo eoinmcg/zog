@@ -51,7 +51,7 @@ export default [
     ],
   },
   {
-    title: 'GOING UNDERGROUND',
+    title: 'CRAWLSPACE',
     speed: .7,
     distance: 60,
     weather: bgs[2],
@@ -90,7 +90,7 @@ export default [
     ],
   },
   {
-    title: 'NIGHT NIGHT',
+    title: 'NIGHT FRIGHT',
     speed: .7,
     distance: 50,
     weather: bgs[1],
