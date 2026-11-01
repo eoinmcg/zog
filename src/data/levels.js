@@ -12,6 +12,7 @@ import meteorShower from '../weather/meteorShower';
 import deepSpace from '../weather/deepSpace';
 import spacePort from '../weather/spacePort';
 
+import Boss from '../sprites/boss';
 import Grass from "../sprites/grass";
 import config from './config';
 
@@ -116,7 +117,6 @@ export default [
     weather: bgs[6],
     music: 6,
     groundCol: new Color(.4, .3, .4),
-    portal: false,
     setUp() {
       makeGround(this.groundCol)
       this.ufo = new EngineObject3D(
@@ -140,6 +140,29 @@ export default [
       tile: 30
     }
   },
+  {
+    title: 'PASSPORT CONTROL',
+    speed: 0,
+    distance: 30,
+    weather: bgs[6],
+    music: 6,
+    groundCol: new Color(.4, .3, .4),
+    portal: false,
+    setUp() {
+      makeGround(this.groundCol)
+      this.ufo = new EngineObject3D(
+        vec3(6, 10, -200),
+        config.models.ufo.mesh,
+        null,
+        // config.palette.grass.col
+      );
+      this.ufo.rotation3D.x = -PI * .5
+      this.ufo.scale3D = vec3(20);
+
+    },
+    phases: [
+    ],
+  },
 ]
 
 function makeGround(col, grassNum = 50, grassTile = 0) {
@@ -147,4 +170,6 @@ function makeGround(col, grassNum = 50, grassTile = 0) {
   for (let i = grassNum; i--;) {
     new Grass(true, col, grassTile)
   }
+  new Boss()
+
 }

@@ -1,7 +1,7 @@
 import {
   vec3,
   timeDelta,
-  clamp,
+  clamp, Light3D, WHITE,
 } from 'littlejsengine';
 
 import Baddie from './baddie';
@@ -41,6 +41,10 @@ export default class Wave extends Baddie {
 
     // Wave tracking
     this.waveCounted = false;
+
+    this.emissive = 1
+    this.addChild(new Light3D(vec3(), 10, WHITE));
+
   }
 
   update() {

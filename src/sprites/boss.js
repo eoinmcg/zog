@@ -1,126 +1,336 @@
 import {
-  EngineObject3D, buildExtrude, render3D,
-  Light3D, tile, vec2, vec3, Trail3D, hsl,
-  WHITE, PI, tweak, timeDelta, time,
-  clamp, lerp, rand, setPaused,
-} from 'littlejsengine'
+  EngineObject3D, Light3D, tile, vec3,
+  buildCylinder,buildBox,
+  hsl, WHITE, clamp, rand,
+} from 'littlejsengine';
 
 import { spark, boom } from '../helpers/particles';
 import state from '../data/state';
 import config from '../data/config';
-
 import Shockwave from './shockwave';
 import BossFire from './bossfire';
 
+const HOME_Z = -50;
+const RUSH_END_Z = 7;
+const MAX_X = 6;
+// Register retro_scifi_boss_16x16.png as texture #1 in your LittleJS texture list.
+// Change this number if your game loads the boss texture in a different slot.
+const BOSS_TEXTURE = 0;
+const BOSS_FRAME_SIZE = 8;
+const BOSS_FRAMES = {
+  // idle: [0, 1],
+  // telegraph: [2, 3],
+  // rush: [4, 5],
+  // hit: [6],
+  // powered: [7],
+  idle: [64,65],
+  telegraph: [66],
+  rush: [67],
+  hit: [68],
+  powered: [66],
+};
+
 export default class Boss extends EngineObject3D {
-
   constructor() {
-    const frameIndices = [0]
-    const frames = frameIndices.map(i => buildExtrude(tile(i, 16, 1), vec2(8), .3));
-    super(vec3(0, 5, -50), frames[0]);
+    // No mesh + TileInfo = camera-facing billboard in LittleJS Render3D.
+    super(vec3(0, 5, HOME_Z), undefined, tile(0, BOSS_FRAME_SIZE, BOSS_TEXTURE));
 
-    this.name = 'boss';
-    this.attackTimer = 0;
-
-    this.velocity3D = vec3(.1, 0, 0)
-
-    this.maxEnergy = 1;
+    this.name = 'enemy';
+    this.type = 'boss';
+    // Billboard width/height in world units; Z is used for collision only.
+    this.size3D = vec3(5, 5, 2);
+    this.animTick = 0;
+    this.currentFrame = -1;
+    this.upright = true;
+    this.maxEnergy = 12;
     this.energy = this.maxEnergy;
-
     this.hitTimer = 0;
     this.hitCooldown = 15;
     this.dead = false;
-
     this.normalColor = this.color;
-    this.setCollision();
-    this.emissive = 1
+    this.emissive = 1;
     this.addChild(new Light3D(vec3(), 10, WHITE));
+    this.setCollision();
+
+    this.homeY = this.pos3D.y;
+    this.phase = 'idle';
+    this.phaseTimer = 75;
+    this.attack = null;
+    this.lastAttack = null;
+    this.burstTimer = 0;
+    this.burstsLeft = 0;
+    this.volleyIndex = 0;
+    this.rushX = 0;
+    this.velocity3D = vec3(.1, 0, 0);
+
+    this.hoverDisc = new HoverDisc();
+    this.addChild(this.hoverDisc);
+  }
+
+  update() {
+    if (this.dead) return;
+    super.update();
+
+    if (this.hitTimer > 0) --this.hitTimer;
+    --this.phaseTimer;
+
+    if (this.phase === 'idle' || this.phase === 'recovery') {
+      this.patrol();
+      if (this.phaseTimer <= 0) this.beginTelegraph();
+    } else if (this.phase === 'telegraph') {
+      this.telegraph();
+      if (this.phaseTimer <= 0) this.beginAttack();
+    } else if (this.phase === 'attack') {
+      this.updateAttack();
+    } else if (this.phase === 'retreat') {
+      this.updateRetreat();
+    }
+
+    if (this.hitTimer > 0) this.color = hsl(0, 1, .65);
+    else if (this.phase !== 'telegraph') this.color = this.normalColor;
+
+    this.updateAnimation();
+  }
+
+  updateAnimation() {
+    // Keep frame selection independent from gameplay state transitions.
+    ++this.animTick;
+    let frames = BOSS_FRAMES.idle;
+    let interval = 18;
+
+    if (this.hitTimer > 0) {
+      frames = BOSS_FRAMES.hit;
+    } else if (this.phase === 'telegraph') {
+      frames = BOSS_FRAMES.telegraph;
+      interval = this.phaseTimer < 20 ? 4 : 9;
+    } else if (this.phase === 'attack' && this.attack === 'rush') {
+      frames = BOSS_FRAMES.rush;
+      interval = 5;
+    } else if (this.phase === 'retreat') {
+      frames = BOSS_FRAMES.rush;
+      interval = 9;
+    } else if (this.phase === 'attack') {
+      frames = BOSS_FRAMES.powered;
+    }
+
+    const frame = frames[Math.floor(this.animTick / interval) % frames.length];
+    if (frame !== this.currentFrame) {
+      this.currentFrame = frame;
+      this.tileInfo = tile(frame, BOSS_FRAME_SIZE, BOSS_TEXTURE);
+    }
+  }
+
+  patrol() {
+    if (Math.abs(this.pos3D.x) >= MAX_X) {
+      this.pos3D.x = clamp(this.pos3D.x, -MAX_X, MAX_X);
+      this.velocity3D.x *= -1;
+    }
+  }
+
+  beginTelegraph() {
+    const choices = ['fire', 'shockwave', 'rush'].filter(a => a !== this.lastAttack);
+    this.attack = choices[Math.floor(rand(0, choices.length))];
+    this.lastAttack = this.attack;
+    this.phase = 'telegraph';
+    this.phaseTimer = this.attack === 'rush' ? 75 : 55;
+    this.velocity3D = vec3();
+    this.rushX = clamp(this.pos3D.x, -4, 4);
+  }
+
+  telegraph() {
+    const warningColor = this.attack === 'fire'
+      ? hsl(.28, 1, .5)
+      : this.attack === 'shockwave'
+        ? hsl(0, 1, .5)
+        : hsl(.13, 1, .55);
+
+    // Faster blinking as launch approaches.
+    const interval = this.phaseTimer < 20 ? 4 : 10;
+    // this.color = Math.floor(this.phaseTimer / interval) % 2 ? warningColor : WHITE;
+
+    if (this.attack === 'rush') {
+      // Pull back before charging and line up on the center lane.
+      this.pos3D.x += (0 - this.pos3D.x) * .08;
+      this.pos3D.z = Math.max(HOME_Z - 6, this.pos3D.z - .12);
+      this.pos3D.y += (this.homeY - this.pos3D.y) * .04;
+    }
+    if (this.phaseTimer % 8 === 0) spark(this.pos3D.copy());
+  }
+
+  beginAttack() {
+    this.phase = 'attack';
+    if (this.attack === 'rush') {
+      this.phaseTimer = 105; // safety fallback
+      this.velocity3D = vec3(0, 0, 2.1);
+    } else if (this.attack === 'fire') {
+      this.phaseTimer = 75;
+      this.burstTimer = 0;
+      this.burstsLeft = 4;
+      this.volleyIndex = 0;
+    } else {
+      this.phaseTimer = 30;
+      new Shockwave(vec3(this.pos3D.x, .5, this.pos3D.z + 5));
+      state.shake = .35;
+    }
+  }
+
+  updateAttack() {
+    if (this.attack === 'rush') {
+      if (this.pos3D.z >= RUSH_END_Z || this.phaseTimer <= 0) {
+        this.pos3D.z = Math.min(this.pos3D.z, RUSH_END_Z);
+        this.velocity3D = vec3(0, 0, -1.5);
+        this.phase = 'retreat';
+        this.phaseTimer = 100;
+      } else if (this.phaseTimer % 3 === 0) {
+        spark(this.pos3D.copy());
+      }
+    } else if (this.attack === 'fire') {
+      if (this.burstsLeft > 0 && --this.burstTimer <= 0) {
+        this.fire(this.volleyIndex++);
+        --this.burstsLeft;
+        this.burstTimer = 14;
+      }
+      if (this.phaseTimer <= 0) this.endAttack();
+    } else if (this.phaseTimer <= 0) {
+      this.endAttack();
+    }
 
   }
 
-
-  update() {
-    super.update();
-
-    this.attackTimer++;
-    const maxX = 6
-    if (Math.abs(this.pos3D.x) >= maxX) {
-      this.pos3D.x = clamp(this.pos3D.x, -maxX, maxX);
-      this.velocity3D.x *= -1;
+  updateRetreat() {
+    this.pos3D.y += (this.homeY - this.pos3D.y) * .08;
+    if (this.pos3D.z <= HOME_Z || this.phaseTimer <= 0) {
+      this.pos3D.z = HOME_Z;
+      this.pos3D.y = this.homeY;
+      this.endAttack();
     }
+  }
 
-    if (this.attackTimer >= 180) {
-      this.attackTimer = 0;
-      new Shockwave(vec3(0, .5, this.pos3D.z + 5));
-      this.fire()
-    }
+  endAttack() {
+    this.phase = 'recovery';
+    this.phaseTimer = 65;
+    this.velocity3D = vec3(rand() < .5 ? -.1 : .1, 0, 0);
+  }
 
-    if (this.hitTimer > 0) {
-      this.hitTimer--;
-      if (!this.hitTimer) {
-        this.color = this.normalColor;
-      }
+  fire(index = 0) {
+    const count = 5;
+    const gap = index % count;
+    const origin = this.pos3D.copy().add(vec3(0, 0, 5));
+    for (let i = 0; i < count; i++) {
+      // Rotating safe gap in each volley.
+      if (i === gap) continue;
+      new BossFire(origin.copy(), (i - 2) * .18, 0, .8 + index * .04);
     }
   }
 
   collideWithObject(o) {
-    console.log({ o })
-    if (o.name !== 'laser') return;
-
-    o.destroy(false);
-    this.takeDamage();
+    if (o.name === 'laser') {
+      o.destroy(false);
+      this.takeDamage();
+    } else if (o.name === 'player' && this.phase === 'attack' && this.attack === 'rush') {
+      o.loseLive(this);
+    }
   }
 
   takeDamage(amount = 1) {
     if (this.dead || this.hitTimer > 0) return;
-
     this.energy = Math.max(0, this.energy - amount);
-
     this.hitTimer = this.hitCooldown;
-    this.color = hsl(0, 1, .5);
-
-    spark(this.pos3D);
-
-    if (this.energy <= 0) {
-      this.die();
-    }
+    spark(this.pos3D.copy());
+    if (this.energy <= 0) this.die();
   }
 
   die() {
     if (this.dead) return;
-
     this.dead = true;
-
-    spark(this.pos3D);
     this.destroy();
-    state.shake = 3
-
+    state.shake = 3;
     const pos = this.pos3D.copy();
-
     for (let i = 0; i < 25; i++) {
-      state.events.add(i * .05, () => {
-        boom(pos.add(vec3(
-          rand(-4, 4),
-          rand(-4, 4),
-          rand(-2, 2)
-        )));
-      });
+      state.events.add(i * .05, () => boom(pos.copy().add(vec3(
+        rand(-4, 4), rand(-4, 4), rand(-2, 2)
+      ))));
     }
-    // TODO: victory sequence
   }
-  fire() {
-    const count = 5;
-    const spread = .4;
+}
 
-    for (let i = 0; i < count; i++) {
-      const velocityX = (i - (count - 1) / 2) * spread;
 
-      state.events.add(i, () => {
-        new BossFire(
-          this.pos3D.add(vec3(0, 0, 5)),
-          velocityX
-        );
-      })
+
+class HoverDisc extends EngineObject3D {
+  constructor() {
+    super(
+      vec3(0, -2.9, 0),
+      buildCylinder(6, .65, 20),
+      undefined,
+      WHITE
+    );
+
+    this.name = 'bossHoverDisc';
+
+    // Glowing rim
+    const rim = new EngineObject3D(
+      vec3(0, -.28, 0),
+      buildCylinder(5.4, .25, 20),
+      undefined,
+      WHITE
+    );
+
+    rim.emissive = .65;
+    this.addChild(rim);
+
+    // Rotating lights
+    const lamps = [
+      [2.6, 0, hsl(.5, 1, .6)],
+      [-2.6, 0, hsl(.5, 1, .6)],
+      [0, 2.6, hsl(.14, 1, .55)],
+      [0, -2.6, hsl(.14, 1, .55)],
+    ];
+
+    for (const [x, z, color] of lamps) {
+      const lamp = new EngineObject3D(
+        vec3(x, -.05, z),
+        buildBox(vec3(.5, .25, .5)),
+        undefined,
+        color
+      );
+
+      lamp.emissive = 1;
+      this.addChild(lamp);
+
+      lamp.addChild(
+        new Light3D(vec3(0, .25, 0), 3.2, WHITE)
+      );
     }
+
+    // Fins make rotation more visible
+    for (let i = 0; i < 3; i++) {
+      const angle = i * Math.PI * 2 / 3;
+
+      const fin = new EngineObject3D(
+        vec3(
+          Math.cos(angle) * 1.9,
+          .27,
+          Math.sin(angle) * 1.9
+        ),
+        buildBox(vec3(.85, .18, .35)),
+        undefined,
+        hsl(.65, .45, .56)
+      );
+
+      fin.rotation3D.y = -angle;
+      this.addChild(fin);
+    }
+  }
+
+  update() {
+    super.update();
+
+    const boss = this.parent;
+
+    const rushing =
+      boss?.phase === 'attack' &&
+      boss.attack === 'rush';
+
+    this.rotation3D.y += rushing ? .16 : .045;
   }
 }

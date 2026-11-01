@@ -16,7 +16,7 @@ export default {
   sfx: new Sfx(),
   modelPaths: ['earth.glb', 'ufo.glb'],
   models: {},
-  tiles: ['t.png', 'bgs.png', 'logo.png'],
+  tiles: ['t.png', 'boss.png', 'logo.png'],
   trackPaths: [
     "gameOver.ogg",
     "levelComplete.ogg",

@@ -16,6 +16,5 @@ export default class Drone extends Baddie {
       scale: vec3(2)
     });
     this.emissive = 1
-    this.addChild(new Light3D(vec3(), 10, WHITE));
   }
 }
