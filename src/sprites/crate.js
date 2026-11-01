@@ -13,7 +13,7 @@ export default class Crate extends Baddie {
       animFrames: [27],
       animSpeed: 10,
       scale: vec3(2, 4, 2),
-      health: 3,
+      health: 1,
       value: 10,
       type: 'crate',
       scale: vec3(2),

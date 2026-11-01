@@ -79,11 +79,13 @@ export default [
     groundCol: new Color(.9, .6, .6),
     setUp() { makeGround(this.groundCol) },
     phases: [
-      { start: 5, end: 15, types: ['meteor'], freq: [.2, .7] },
+      { start: 5, end: 15, types: ['meteor'], freq: [1, 2] },
       { start: 15, end: 30, types: ['seeker'], freq: [2, 4] },
-      { start: 25, end: 30, types: ['meteor'], freq: [.2, .7] },
+      { start: 25, end: 30, types: ['meteor'], freq: [1, 2] },
+      { start: 5, end: 15, types: ['meteor'], freq: [1, 2] },
       { start: 30, end: 50, types: ['seeker'], freq: [1, 3] },
-      { start: 50, end: 65, types: ['meteor'], freq: [.2, .7] },
+      { start: 30, end: 50, types: ['crate'], freq: [1, 3] },
+      { start: 50, end: 65, types: ['meteor'], freq: [1, 2] },
       { start: 65, end: 80, types: ['seeker'], freq: [1, 3] },
       { start: 75, end: 90, types: ['meteor'], freq: [.2, .7] },
       { start: 90, end: 100, types: ['coins'], freq: [.2, .7] },
@@ -132,8 +134,9 @@ export default [
       { start: 0, end: 75, types: ['wave.left', 'wave.right', 'wave.center'], freq: [3, 5] },
     ],
     obstacles: {
-      col: 'yellow',
-      tile: 30
+      col: 'white',
+      tile: 31,
+      glow: true,
     }
   },
   {
@@ -141,15 +144,16 @@ export default [
     speed: 0,
     distance: 30,
     weather: bgs[6],
-    music: 6,
+    music: 4,
     groundCol: new Color(.4, .3, .4),
     portal: false,
     boss: true,
     setUp() {
       makeGround(this.groundCol)
-      this.ufo = new EngineObject3D(vec3(6, 10, -200), config.models.ufo.mesh);
+      this.ufo = new EngineObject3D(vec3(6, 2, -80), config.models.ufo.mesh);
       this.ufo.rotation3D.x = -PI * .5
       this.ufo.scale3D = vec3(20);
+      state.level.ufo = this.ufo
       state.events.add(2, () => {
         new Boss()
       })

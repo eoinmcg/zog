@@ -21,7 +21,7 @@ export default class Crawler extends Baddie {
     this.velocity3D = vec3(.1 * randSign(), 0, state.speed);
     this.speedFactor = 1.1;
 
-
+    this.emissive = 1;
     this.pos3D.y = .9;
   }
 

@@ -102,7 +102,7 @@ export default class Settings extends Scene {
 
 
     const wave = Math.sin(new Date().getTime() * 0.009);
-    const t = wave > 0 ? 16 : 17;
+    const t = wave > 0 ? 64 : 65;
 
     const yOff = 0
     drawTile(vec2(-6, this.yPos[this.pointer] + yOff), vec2(1), tile(t, config.tileSize), undefined,

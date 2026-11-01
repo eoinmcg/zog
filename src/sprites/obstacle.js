@@ -54,6 +54,11 @@ export default class Obstacle extends EngineObject3D {
       this.rotation3D.z = PI * .5;
     }
 
+    if (settings?.glow === true) {
+      this.emissive = 1;
+    }
+
+
     this.targetY = .5;
     this.pos3D.y = this.targetY - 5;
   }

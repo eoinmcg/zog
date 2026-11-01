@@ -14,6 +14,7 @@ import Model from "../scenes/model.js";
 import Shop from "../scenes/shop.js";
 import Logo from "../scenes/logo.js";
 import Scratch from "../scenes/scratch.js";
+import Victory from "../scenes/victory";
 
 const Scenes = {
   Play: Play,
@@ -24,6 +25,7 @@ const Scenes = {
   Shop: Shop,
   Logo: Logo,
   Scratch: Scratch,
+  Victory: Victory,
 };
 
 export default class SceneManager {

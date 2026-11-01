@@ -114,6 +114,10 @@ export default class Play extends Scene {
 
     config.weather?.update();
 
+    if (state.level?.ufo) {
+      state.level.ufo.rotation3D.z += 0.01
+    }
+
     if (state.score > state.hiScore) {
       if (!state.newHiscore) {
         new Alert({
@@ -250,7 +254,7 @@ export default class Play extends Scene {
       mousePos.x > 18 &&
       mousePos.y > 9.5;
 
-    if (!state.gameOver && (pausePressed || pauseClicked)) {
+    if (!state.gameOver && !state.hitStop && (pausePressed || pauseClicked)) {
       if (paused) {
         if (!state.mute) {
           restartMusic();
@@ -386,7 +390,7 @@ export default class Play extends Scene {
       font.drawText('CONTINUE?', vec2(0, -5), 1.2, true);
       font.drawText('QUIT', vec2(0, -7), 1.2, true);
 
-      const t = this.pointer === 0 ? 41 : 28;
+      const t = this.pointer === 0 ? 61 : 60;
       drawTile(
         vec2(-6.5, this.yPos[this.pointer]),
         vec2(1),

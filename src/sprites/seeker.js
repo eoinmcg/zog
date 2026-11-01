@@ -24,6 +24,7 @@ export default class Seeker extends Baddie {
 
     this.pos3D.y = .9;
     this.homingSpeed = .5
+    this.emissive = 1;
   }
 
   update() {

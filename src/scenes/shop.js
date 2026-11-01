@@ -2,6 +2,7 @@ import {
   EngineObject3D, render3D, Light3D, buildExtrude,
   vec2, vec3, drawText, drawRect, tile, sin, time,
   engineImageFont, Color, BLACK, isTouchDevice,
+  drawTextScreen, Sound, rand, mainCanvasSize
 } from "littlejsengine";
 
 import Scene from "./scene";
@@ -44,6 +45,8 @@ export default class Shop extends Scene {
     super.enter()
 
     this.initItems()
+
+    this.zoggy = new Zoggy()
 
     const navy = config.palette.navy.col;
     const plum = config.palette.plum.col;
@@ -114,9 +117,22 @@ export default class Shop extends Scene {
         ? 'UP: CANCEL | ENTER: EXIT'
         : 'LEFT/RIGHT: SELECT | DOWN: EXIT | ENTER: BUY';
 
-    engineImageFont.drawText(uiHint, vec2(0, -9), .6, true, config.palette.grass.col);
+    engineImageFont.drawText(uiHint, vec2(6, -9), .6, true, config.palette.grass.col);
   }
 
+  renderPost() {
+    super.renderPost?.();
+
+    const text = this.zoggy?.visibleText;
+    if (!text) return;
+
+    drawTextScreen(
+      text,
+      vec2(140, 90),
+      24,
+      config.palette.yellow.col
+    );
+  }
   drawUpgradeBar(o) {
     if (o.stats?.current === undefined || !o.stats.max) return
 
@@ -170,6 +186,31 @@ export default class Shop extends Scene {
 
   }
 
+  renderPost() {
+    super.renderPost?.();
+
+    const zoggy = this.zoggy;
+    if (!zoggy?.visibleText) return;
+
+    // Position slightly above his sprite
+    const worldPos = zoggy.pos3D.copy().add(
+      vec3(0, 1.8, 0)
+    );
+
+    const screenPos = render3D.worldToScreen(worldPos);
+
+    // May be undefined if behind camera
+    if (!screenPos) return;
+
+    drawTextScreen(
+      zoggy.visibleText,
+      screenPos,
+      32,
+      config.palette.grass.col,
+      2,
+      config.palette.black.col
+    );
+  }
   handlePurchase() {
     const o = this.items[this.active]
     const cost = 10
@@ -254,4 +295,66 @@ export default class Shop extends Scene {
     })
   }
 
+}
+
+class Zoggy extends EngineObject3D {
+  constructor(msg) {
+    super(
+      vec3(-6.8, -3.3, 0),
+      buildExtrude(tile(62, config.tileSize), vec2(2.5), .5)
+    );
+
+    this.baseY = this.pos3D.y;
+
+    // Gentle idle bob (no rotation)
+    this.bobAmount = .06;
+    this.bobSpeed = 1.5;
+
+    // Dialogue
+    this.message = msg || 'ohai';
+    this.visibleText = '';
+    this.charDelay = .1;
+    this.speechStart = time + .5;
+
+    this.message = msg || 'ohai';
+    this.visibleText = '';
+    this.charDelay = .18;
+    this.speechStart = time + .5;
+
+  }
+
+  update() {
+    super.update();
+
+    this.pos3D.y =
+      this.baseY +
+      Math.sin(time * this.bobSpeed) * this.bobAmount;
+
+    // Typewriter effect
+    const elapsed = time - this.speechStart;
+
+    const count = Math.min(
+      this.message.length,
+      Math.max(0, Math.floor(elapsed / this.charDelay))
+    );
+
+    if (count > this.visibleText.length) {
+      this.visibleText = this.message.slice(0, count);
+      config.sfx.play('walk')
+
+    }
+  }
+
+  renderPost() {
+
+    if (!this.visibleText) return;
+
+    console.log(this.visibleText)
+    drawText(
+      this.visibleText,
+      vec2(5, -100),
+      48,
+      config.palette.pink.col
+    );
+  }
 }

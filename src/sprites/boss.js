@@ -9,6 +9,7 @@ import state from '../data/state';
 import config from '../data/config';
 import Shockwave from './shockwave';
 import BossFire from './bossfire';
+import { stopMusic } from '../helpers/music';
 
 const HOME_Z = -50;
 const RUSH_END_Z = 7;
@@ -37,7 +38,7 @@ export default class Boss extends EngineObject3D {
     this.animTick = 0;
     this.currentFrame = -1;
     this.upright = true;
-    this.maxEnergy = 12;
+    this.maxEnergy = 1;
     this.energy = this.maxEnergy;
     this.hitTimer = 0;
     this.hitCooldown = 15;
@@ -232,6 +233,7 @@ export default class Boss extends EngineObject3D {
     if (o.name === 'laser') {
       o.destroy(false);
       this.takeDamage();
+      config.sfx.play('bossHit')
     } else if (o.name === 'player' && this.phase === 'attack' && this.attack === 'rush') {
       o.loseLive(this);
     }
@@ -249,12 +251,20 @@ export default class Boss extends EngineObject3D {
     if (this.dead) return;
     this.dead = true;
     this.destroy();
+
+    stopMusic()
+    state.events.add(3, () => {
+      config.sceneManager.changeScene('Victory');
+    })
     state.shake = 3;
     const pos = this.pos3D.copy();
     for (let i = 0; i < 25; i++) {
-      state.events.add(i * .05, () => boom(pos.copy().add(vec3(
-        rand(-4, 4), rand(-4, 4), rand(-2, 2)
-      ))));
+      state.events.add(i * .05, () => {
+        boom(pos.copy().add(vec3(
+          rand(-4, 4), rand(-4, 4), rand(-2, 2)
+        )));
+        config.sfx.play('explosion')
+      })
     }
   }
 }
