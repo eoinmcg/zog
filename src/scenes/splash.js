@@ -106,10 +106,7 @@ export default class Splash extends Scene {
   }
 
   render() {
-    // const title = config.title.replace(' ', '\n')
-    // drawText(title, vec2(-20.2, 3.8), 4, config.palette.orange.col, 0, BLACK, 'left', config.font)
-    // drawText(title, vec2(-20, 4), 4, config.palette.red.col, 0, BLACK, 'left', config.font)
-    drawTile(vec2(-7, -5), vec2(27), tile(0, 1024, 2))
+    drawTile(vec2(-7, -5), vec2(27), tile(0, 1024, 1))
   }
 
   renderPost() {

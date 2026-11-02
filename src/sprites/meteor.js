@@ -22,7 +22,7 @@ export default class Meteor extends Baddie {
     const meteorMesh = buildSphere(1.5, 12, 8);
 
     super(pos, {
-      health: 10,
+      health: 50,
       value: 50,
       type: 'meteor',
       customMesh: meteorMesh,
