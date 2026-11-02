@@ -22,9 +22,10 @@ export default class Model extends Scene {
     engineObjectsDestroy();
 
     render3D.bloom = true;
-    const navy = config.palette.navy.col;
-    const plum = config.palette.navy.plum;
-    render3D.setSky(BLACK, navy, plum, .5);
+    const p = config.palette;
+    const navy = p.navy.col;
+    const plum = p.plum.col;
+    render3D.setSky(BLACK, p.black.col, p.black.col, .5);
 
     const light = { from: vec3(-.25, .25, 1), color: hsl(.6, .4, .65), intensity: .8 };
     new DirectionalLight3D(light.from, light.color, light.intensity);

@@ -18,7 +18,7 @@ By [@eoinmcg](https://twitter.com/eoinmcg)
 ----
 
 Controls:
-- **X** change direction and shoot
+- **X** zigzag
 - **Z** Jump
 - or use a gamepad
 - Touch devices: Tap left or right

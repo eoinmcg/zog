@@ -1,4 +1,4 @@
-const cacheName = "escape-from-zog-v-4889573";
+const cacheName = "escape-from-zog-v-bed4278";
 const assets = [
   "./Orbitron-ExtraBold.ttf",
   "./apple-icon-180.png",

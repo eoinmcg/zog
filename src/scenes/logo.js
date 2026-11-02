@@ -39,7 +39,7 @@ export default class Logo extends Scene {
     setFontDefault(this.font)
     const title = config.title.replace(' ', '\n')
     drawText(title, vec2(-20.2, 3.8), 4, config.palette.orange.col, 0, undefined, 'left', this.font)
-    drawText(title, vec2(-20, 4), 4, config.palette.red.col, 0, undefined, 'left', this.font)
+    drawText(title, vec2(-20, 4), 4, config.palette.grass.col, 0, undefined, 'left', this.font)
   }
 
   saveLogo() {

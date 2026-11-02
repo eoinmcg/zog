@@ -114,7 +114,7 @@ export default class Play extends Scene {
       })
       state.events.add(5, () => {
         new Alert({
-          text: isTouchDevice ? 'Tap to jump' : 'Y to jump',
+          text: isTouchDevice ? 'Tap to jump' : 'Z to jump',
           typeSpeed: 500,
           fontSize: 1.5,
           yVel: 0,
