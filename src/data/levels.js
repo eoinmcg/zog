@@ -88,7 +88,7 @@ export default [
       { start: 50, end: 65, types: ['meteor'], freq: [.5, 1] },
       { start: 65, end: 80, types: ['seeker'], freq: [1, 3] },
       { start: 75, end: 90, types: ['meteor'], freq: [.2, .7] },
-      { start: 90, end: 100, types: ['crates'], freq: [.2, .7] },
+      { start: 90, end: 100, types: ['crate'], freq: [.2, .7] },
     ],
   },
   {

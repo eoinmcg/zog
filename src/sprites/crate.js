@@ -1,5 +1,6 @@
 import {
-  vec3, rand
+  vec3, rand,
+  PI
 } from 'littlejsengine';
 
 import Baddie from './baddie';
@@ -32,17 +33,14 @@ export default class Crate extends Baddie {
 
   destroy() {
 
-    if (this.contains && this.contains === 'heart' && state.lives < 4) {
+    if (state.lives <= 1) {
       new Heart(this.pos3D);
-      return
-    }
-
-    if (this.contains && this.contains === 'coin') {
+    } else if (state.rand() > .9 && state.lives <= 1) {
+      new Heart(this.pos3D);
+    } else {
       new Coin(this.pos3D);
-      return
     }
 
-    new Coin(this.pos3D);
     super.destroy()
   }
 
