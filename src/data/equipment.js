@@ -4,14 +4,14 @@ export default {
     max: 4,
     current: 0,
     owned: false,
-    cost: 10,
+    cost: 20,
   },
   jetpack: {
     tile: 24,
     max: 4,
     current: 1,
     owned: true,
-    cost: 10,
+    cost: 20,
   },
   glasses: {
     tile: 35,
