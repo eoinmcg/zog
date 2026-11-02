@@ -11,6 +11,7 @@ import { portalParticles } from '../helpers/particles';
 const RING_COUNT = 8;
 const MAX_SIZE = 50;
 const SPEED = .2;
+const PARTICLE_INTERVAL = 3;
 
 export default class Portal extends EngineObject3D {
   constructor() {
@@ -20,6 +21,7 @@ export default class Portal extends EngineObject3D {
 
     this.rings = [];
     this.castShadow = false;
+    this.particleFrame = 0;
 
     this.size3D = vec3(20, 20, 4);
     this.velocity3D.z = state.speed;
@@ -32,7 +34,7 @@ export default class Portal extends EngineObject3D {
     );
 
     const colA = config.palette.yellow.col,
-      colB = config.palette.plum.col
+      colB = config.palette.plum.col;
 
     for (let i = 0; i < RING_COUNT; i++) {
       const ring = new EngineObject3D(
@@ -48,7 +50,6 @@ export default class Portal extends EngineObject3D {
       this.rings.push(ring);
     }
 
-
     this.exitSign = this.addChild(
       new EngineObject3D(
         vec3(0, 30, 1),
@@ -58,56 +59,60 @@ export default class Portal extends EngineObject3D {
     this.exitSign.emissive = 1;
     this.exitSign.pixelated = true;
     this.exitSign.color = WHITE;
-
   }
 
   update() {
     super.update();
 
-    if (this.pos3D.y < 0) this.pos3D.y += .3
-    this.emitParticles()
+    if (this.pos3D.y < 0) this.pos3D.y += .3;
+
+    if (++this.particleFrame % PARTICLE_INTERVAL === 0) {
+      this.emitParticles();
+    }
 
     this.exitSign.pos3D.y = 30 + Math.sin(time * 4) * .5;
 
-    for (let i = 0; i < this.rings.length; i++) {
+    const t = time * SPEED;
+    const step = 1 / RING_COUNT;
+
+    for (let i = 0; i < RING_COUNT; i++) {
       const ring = this.rings[i];
 
-      const progress = (time * SPEED + i / RING_COUNT) % 1;
-
-      // Grow from center outward
+      const progress = (t + i * step) % 1;
       const size = Math.max(.001, progress * MAX_SIZE);
 
-      ring.scale3D = vec3(size);
+      ring.scale3D.x = size;
+      ring.scale3D.y = size;
+      ring.scale3D.z = size;
 
-      // Small circles in front, large circles behind
       ring.pos3D.z = -progress * 2;
-      ring.rotation3D.z += .01
+      ring.rotation3D.z += .01;
     }
   }
 
   collideWithObject(o) {
-
-    if (state.level.exitReached === true) return
+    if (state.level.exitReached === true) return;
 
     if (o.name === 'player') {
-      o.hide()
-      state.speed = 0
+      o.hide();
+      state.speed = 0;
       state.level.exitReached = true;
-      state.level.portalExitPos = this.pos3D.copy().add(vec3(0, 0, -5))
+      state.level.portalExitPos = this.pos3D.copy().add(vec3(0, 0, -5));
+
       state.events.add(.1, () => {
-        config.sfx.play('teleport')
-      })
+        config.sfx.play('teleport');
+      });
+
       state.events.add(1, () => {
-        state.currentLevel += 1
+        state.currentLevel += 1;
         state.level.exitReached = false;
         config.sceneManager.changeScene('Shop');
-        this.destroy()
-      })
+        this.destroy();
+      });
 
     } else if (o?.type === 'baddie') {
-      o.destroy()
+      o.destroy();
     }
-
   }
 
   emitParticles() {
@@ -117,12 +122,12 @@ export default class Portal extends EngineObject3D {
     const angle = rand(0, Math.PI * 2);
     const r = Math.sqrt(1 - y * y);
 
-    const pos = this.pos3D.add(vec3(
-      r * Math.cos(angle) * radius,
-      y * radius,
-      r * Math.sin(angle) * radius
-    ));
+    const pos = vec3(
+      this.pos3D.x + r * Math.cos(angle) * radius,
+      this.pos3D.y + y * radius,
+      this.pos3D.z + r * Math.sin(angle) * radius - 15
+    );
 
-    portalParticles(pos.add(vec3(0, 0, -15)));
+    portalParticles(pos);
   }
 }
