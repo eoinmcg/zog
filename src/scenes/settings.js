@@ -54,9 +54,7 @@ export default class Settings extends Scene {
       top: pal.plum.col, horizon: pal.navy.col, bottom: pal.plum.col,
       ambient: 1
     }
-    console.log({ spaceCopy })
     this.initWeather(spaceCopy);
-
   }
 
 

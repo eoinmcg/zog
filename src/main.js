@@ -88,7 +88,7 @@ if (params.l) {
   config.startScene = "Play";
   state.currentLevel = parseInt(params.l, 10)
   state.equipment.raygun.owned = true
-  console.log('LEVEL', config.levelNum)
+  console.log('SKIPPING TO LEVEL', state.currentLevel)
 }
 if (params.s) {
   config.startScene = params.s.charAt(0).toUpperCase() + params.s.slice(1);

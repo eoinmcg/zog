@@ -19,7 +19,8 @@ export default class Alert extends EngineObject {
       ttl: 3,
       imageFont: null,
       teletype: true,
-      typeSpeed: 20
+      typeSpeed: 20,
+      yVel: .1,
     };
 
     props = { ...defaults, ...props };
@@ -89,7 +90,7 @@ export default class Alert extends EngineObject {
 
     // Phase 2: Movement
     if (this.timer) {
-      this.pos.y += 0.1;
+      this.pos.y += this.props.yVel
 
       if (this.timer.elapsed()) {
         this.destroy();

@@ -46,7 +46,6 @@ export default class Meteor extends Baddie {
       if (!this.hasCrashed) {
         this.hasCrashed = true
         state.shake = .5
-        console.log('CRASH')
         config.sfx.play('explosion')
         spark(this.pos3D);
       }

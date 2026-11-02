@@ -38,7 +38,7 @@ export default class Boss extends EngineObject3D {
     this.animTick = 0;
     this.currentFrame = -1;
     this.upright = true;
-    this.maxEnergy = 1;
+    this.maxEnergy = 10;
     this.energy = this.maxEnergy;
     this.hitTimer = 0;
     this.hitCooldown = 15;

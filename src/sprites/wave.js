@@ -84,7 +84,6 @@ export default class Wave extends Baddie {
   }
 
   destroy(o) {
-    console.log('REMOVED')
     if (o && o.name === 'laser') {
       this.checkWave();
     }
@@ -103,7 +102,8 @@ export default class Wave extends Baddie {
 
     if (wave.remaining === 0) {
       state.waves.delete(this.waveId);
-      console.log('WAVE DESTROYED');
+      state.score += 50
+      // console.log('WAVE DESTROYED');
     }
   }
 }

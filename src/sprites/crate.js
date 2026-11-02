@@ -32,7 +32,7 @@ export default class Crate extends Baddie {
 
   destroy() {
 
-    if (this.contains && this.contains === 'heart') {
+    if (this.contains && this.contains === 'heart' && state.lives < 4) {
       new Heart(this.pos3D);
       return
     }
@@ -42,11 +42,7 @@ export default class Crate extends Baddie {
       return
     }
 
-    if (rand() < 0.7) {
-      new Coin(this.pos3D);
-    } else {
-      new Heart(this.pos3D);
-    }
+    new Coin(this.pos3D);
     super.destroy()
   }
 

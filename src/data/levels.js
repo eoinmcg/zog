@@ -40,7 +40,7 @@ export default [
     groundCol: new Color(.1, .5, .5),
     setUp() { makeGround(this.groundCol) },
     phases: [
-      { start: 0, end: 95, types: ['coins'], freq: [4, 6] },
+      { start: 10, end: 95, types: ['coins'], freq: [4, 6] },
       // { start: 0, end: 75, types: ['seeker'], freq: [3, 5] },
       { start: 40, end: 70, types: ['bat'], freq: [.5, 1.5] },
       // { start: 0, end: 75, types: ['crate'], freq: [3, 5] },
@@ -116,7 +116,7 @@ export default [
   {
     title: 'SPACE PORT',
     speed: .7,
-    distance: 3,
+    distance: 50,
     weather: bgs[6],
     music: 6,
     groundCol: new Color(.4, .3, .4),
@@ -128,10 +128,11 @@ export default [
 
     },
     phases: [
-      { start: 0, end: 30, types: ['seeker'], freq: [2, 4] },
-      { start: 0, end: 55, types: ['obstacle.flat'], freq: [.5, 1] },
-      { start: 0, end: 75, types: ['coins'], freq: [5, 8] },
-      { start: 0, end: 75, types: ['wave.left', 'wave.right', 'wave.center'], freq: [3, 5] },
+      { start: 5, end: 90, types: ['seeker'], freq: [2, 4] },
+      { start: 5, end: 90, types: ['obstacle.flat'], freq: [2, 4] },
+      { start: 10, end: 90, types: ['coins'], freq: [5, 8] },
+      { start: 0, end: 90, types: ['wave.left', 'wave.right', 'wave.center'], freq: [5, 9] },
+      { start: 90, end: 100, types: ['crate'], freq: [1, 2] },
     ],
     obstacles: {
       col: 'white',

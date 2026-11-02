@@ -101,6 +101,28 @@ export default class Play extends Scene {
     }));
 
     state.speed = state.level.speed;
+
+    if (state.currentLevel === 1) {
+      state.events.add(3, () => {
+        new Alert({
+          text: isTouchDevice ? 'Tap to zigzag' : 'X to zigzag',
+          typeSpeed: 500,
+          fontSize: 1.5,
+          yVel: 0,
+          pos: vec2(-10, -2)
+        })
+      })
+      state.events.add(5, () => {
+        new Alert({
+          text: isTouchDevice ? 'Tap to jump' : 'Y to jump',
+          typeSpeed: 500,
+          fontSize: 1.5,
+          yVel: 0,
+          pos: vec2(10, -2)
+        })
+      })
+    }
+
   }
 
   update() {
@@ -272,11 +294,9 @@ export default class Play extends Scene {
     if (this.uiInput === 'up') {
       this.pointer--;
       config.sfx.play('walk');
-      console.log('up')
     } else if (this.uiInput === 'down') {
       this.pointer++;
       config.sfx.play('walk');
-      console.log('down')
     } else if (this.uiInput === 'enter' && this.pointer === 0) {
       this.restartGame();
     } else if (this.uiInput === 'enter' && this.pointer === 1) {
@@ -312,7 +332,7 @@ export default class Play extends Scene {
   }
 
   handlePauseMenuSelection() {
-    if (!paused) return;
+    if (!paused || state.hitStop) return;
 
     const actions = [
       () => { state.mute = !state.mute; },
@@ -432,6 +452,7 @@ export default class Play extends Scene {
       RED
     );
   }
+
 
   renderPaused() {
     if (isTouchDevice) {

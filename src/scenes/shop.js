@@ -311,15 +311,11 @@ class Zoggy extends EngineObject3D {
     this.bobSpeed = 1.5;
 
     // Dialogue
-    this.message = msg || 'ohai';
+    this.message = msg || 'welcome \n earthling!';
     this.visibleText = '';
     this.charDelay = .1;
     this.speechStart = time + .5;
 
-    this.message = msg || 'ohai';
-    this.visibleText = '';
-    this.charDelay = .18;
-    this.speechStart = time + .5;
 
   }
 

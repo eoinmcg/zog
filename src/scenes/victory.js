@@ -1,7 +1,7 @@
 import {
   keyWasPressed, gamepadWasPressed, inputClear,
   render3D, engineObjectsDestroy, EngineObject3D,
-  Light3D, Color,
+  Light3D, Color, PI,
   vec2, vec3, drawText, setPaused, paused,
 } from 'littlejsengine';
 
@@ -65,17 +65,36 @@ export default class Victory extends Scene {
       config.palette.plum.col
     );
 
-    state.events.add(1, () => new Alert({ text: 'BYE' }))
-    state.events.add(2, () => new Alert({ text: 'BYE' }))
-    state.events.add(3, () => new Alert({ text: 'Zog' }))
+    state.events.add(4, () => {
+      ufo = new EngineObject3D(
+        vec3(0, 0, -10),
+        config.models.ufo.mesh,
+        null,
+        config.palette.white.col
+      );
+      ufo.scale3D = vec3(.25);
+      ufo.rotation3D.x = -PI * .4
+      ufo.velocity3D = vec3(0, 0, .1)
+    })
+
+    state.events.add(1, () => new Alert({ text: 'Bye bye' }))
+    state.events.add(3, () => new Alert({ text: 'Planet Zog' }))
+    state.events.add(10, () => new Alert({ text: 'The END', yVel: 0, ttl: 50 }))
+
+    render3D.camera.pos = vec3(0, 0, 10);
 
   }
 
   update() {
     super.update()
 
+    if (ufo && ufo.pos3D.z > 10) ufo.destroy()
+    if (ufo && ufo.pos3D.z > 4 && ufo.pos3D.z < 9) {
+      config.sfx.play('jet')
+    }
+    if (ufo) { ufo.rotation3D.z += 0.001 }
+
     if (zog) {
-      console.log(zog.pos3D)
       zog.rotation3D.y += 0.001
       zog.rotation3D.z += 0.001
     }

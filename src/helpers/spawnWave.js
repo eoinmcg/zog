@@ -6,7 +6,6 @@ import state from "../data/state";
 export default function spawnWave(pattern = 'left', num = 5) {
   let id = rand().toString(36).substr(2, 9)
   pattern = pattern || Object.keys(wavePatterns).rnd()
-  console.log(pattern, id)
 
   state.waves.set(id, { remaining: num });
   for (let i = 0; i < num; i += 1) {
