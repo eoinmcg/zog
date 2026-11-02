@@ -79,23 +79,57 @@ export default class Shop extends Scene {
     drawText(text, vec2(0, 9.9), 2, BLACK)
     drawText(text, vec2(0, 10), 2)
 
-    const font = engineImageFont;
+    const font = engineImageFont
     const numCoins = state.coins.toString().padStart(3, '0')
+
     font.drawText('COINS: ' + numCoins, vec2(0, 6.9), .8, true, config.palette.black.col)
     font.drawText('COINS: ' + numCoins, vec2(0, 7), .8, true, config.palette.yellow.col)
 
-    const activeCol = config.palette.red.col,
-      col = config.palette.gray.col
+    const activeCol = config.palette.red.col
+    const col = config.palette.gray.col
 
     this.items.forEach((o, i) => {
-      const selected = !this.exitSelected && i === this.active;
+      const selected = !this.exitSelected && i === this.active
 
       if (selected) {
-        drawRect(o.textPos.add(vec2(0, -3.5)), vec2(8, 10), config.palette.black.mk(.1));
+        drawRect(
+          o.textPos.add(vec2(0, -3.5)),
+          vec2(8, 10),
+          config.palette.black.mk(.1)
+        )
+
+        // Price tag
+        const maxed = o.stats && o.stats.current >= o.stats.max
+        const price = this.getPrice(o)
+        const priceText = maxed ? 'MAX' : `${price}C`
+
+        const tagPos = o.textPos.add(vec2(-3.4, .8))
+        const tagSize = vec2(1.9)
+
+        // Dark offset shadow
+        drawRect(tagPos.add(vec2(.12, -.12)), tagSize, config.palette.black.col, 0, 0, 1)
+
+        // Yellow circular tag
+        drawRect(tagPos, tagSize, config.palette.yellow.col, 0, 0, 1)
+        font.drawText(priceText, tagPos.add(vec2(-1, 1)), .8, true, config.palette.yellow.col)
       }
 
-      font.drawText(o.name.toUpperCase(), o.textPos.add(vec2(0, -.1)), .7, true, BLACK)
-      font.drawText(o.name.toUpperCase(), o.textPos, .7, true, selected ? activeCol : col)
+      font.drawText(
+        o.name.toUpperCase(),
+        o.textPos.add(vec2(0, -.1)),
+        .7,
+        true,
+        BLACK
+      )
+
+      font.drawText(
+        o.name.toUpperCase(),
+        o.textPos,
+        .7,
+        true,
+        selected ? activeCol : col
+      )
+
       this.drawUpgradeBar(o)
     })
 
@@ -103,7 +137,11 @@ export default class Shop extends Scene {
     const exitPos = vec2(0, -6)
 
     if (this.exitSelected) {
-      drawRect(exitPos, vec2(8, 1.5), config.palette.black.mk(.3))
+      drawRect(
+        exitPos,
+        vec2(8, 1.5),
+        config.palette.black.mk(.3)
+      )
     }
 
     font.drawText('EXIT', exitPos.add(vec2(0, -.1)), .8, true, BLACK)
@@ -115,9 +153,9 @@ export default class Shop extends Scene {
         : 'SWIPE L&R: SELECT | DOWN: EXIT | TAP: BUY'
       : this.exitSelected
         ? 'UP: CANCEL | ENTER: EXIT'
-        : 'LEFT/RIGHT: SELECT | DOWN: EXIT | ENTER: BUY';
+        : 'LEFT/RIGHT: SELECT | DOWN: EXIT | ENTER: BUY'
 
-    engineImageFont.drawText(uiHint, vec2(6, -9), .6, true, config.palette.grass.col);
+    engineImageFont.drawText(uiHint, vec2(6, -9), .6, true, config.palette.grass.col)
   }
 
   renderPost() {
@@ -211,9 +249,10 @@ export default class Shop extends Scene {
       config.palette.black.col
     );
   }
+
   handlePurchase() {
     const o = this.items[this.active]
-    const cost = 10
+    const cost = this.getPrice(o)
 
     if (this.finished) return
 
@@ -235,10 +274,10 @@ export default class Shop extends Scene {
     state.coins -= cost
     o.stats.current += 1
     o.stats.owned = true
+
     config.sfx.play('score')
     buy(o.pos)
   }
-
   purchaseSurprise(o, cost) {
     state.coins -= cost
     config.sfx.play('smash')
@@ -293,6 +332,12 @@ export default class Shop extends Scene {
         stats: o.equipment ? state.equipment[o.equipment] : null
       }
     })
+  }
+
+  getPrice(o) {
+    if (!o.stats) return 10 // Surprise!
+
+    return 10 * (o.stats.current + 1)
   }
 
 }
@@ -352,4 +397,5 @@ class Zoggy extends EngineObject3D {
       config.palette.pink.col
     );
   }
+
 }

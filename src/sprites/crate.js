@@ -35,7 +35,7 @@ export default class Crate extends Baddie {
 
     if (state.lives <= 1) {
       new Heart(this.pos3D);
-    } else if (state.rand() > .9 && state.lives <= 1) {
+    } else if (rand() > .9 && state.lives <= 1) {
       new Heart(this.pos3D);
     } else {
       new Coin(this.pos3D);
