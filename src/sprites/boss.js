@@ -137,9 +137,7 @@ export default class Boss extends EngineObject3D {
   render() {
 
     super.render()
-    console.log('??')
     if (!this?.visibleText || this.dead) return;
-    console.log('TEXT')
 
     drawText(
       this.visibleText,
