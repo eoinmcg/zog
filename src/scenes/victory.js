@@ -61,7 +61,7 @@ export default class Victory extends Scene {
 
     this.initWeather(spaceCopy);
     zog = new EngineObject3D(
-      vec3(0, 0, 5),
+      vec3(0, 0, 0),
       config.models.earth.mesh,
       null,
       config.palette.plum.col
@@ -69,21 +69,21 @@ export default class Victory extends Scene {
 
     state.events.add(4, () => {
       ufo = new EngineObject3D(
-        vec3(0, 0, -10),
+        vec3(0, 0, -20),
         config.models.ufo.mesh,
         null,
         config.palette.white.col
       );
       ufo.scale3D = vec3(.25);
       ufo.rotation3D.x = -PI * .4
-      ufo.velocity3D = vec3(0, 0, .1)
+      ufo.velocity3D = vec3(0, 0, .05)
     })
 
     state.events.add(1, () => new Alert({ text: 'Bye bye' }))
     state.events.add(3, () => new Alert({ text: 'Planet Zog' }))
     state.events.add(10, () => new Alert({ text: 'The END', yVel: 0, ttl: 50 }))
 
-    render3D.camera.pos = vec3(0, 0, 10);
+    render3D.camera.pos = vec3(0, 0, 5);
 
   }
 

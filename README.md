@@ -30,13 +30,13 @@ Controls:
 
 -----
 
-Trapped on a hostile alien planet and the locals aren't friendly
+Trapped on a hostile alien planet and the locals aren't friendly.
 
-Blast your way through the weird and wonderful world of planet Zog. 
+Blast your way through the weird world of planet Zog.
 
-There is one small problem: you can't walk in a straight line.
+Momma always said: never run straight when something wants to eat you.
 
-Zig left. Zag right. Dodge incoming nasties. Blast everything that moves. And whatever you do, don't get too comfortable - you're about to change direction again.
+Zig left. Zag right. Dodge incoming nasties. Blast everything that moves. And don't get too comfortable - you're about to change direction again.
 
 Zig. Zag. Zap. Survive.
 
