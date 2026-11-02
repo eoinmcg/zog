@@ -12,6 +12,7 @@ By [@eoinmcg](https://twitter.com/eoinmcg)
 
 ## Play here
 [LittleJS Game Jam 2026 entry](https://eoinmcg.itch.io/escape-from-zog)
+
 [WaveDash](https://wavedash.com/games/escape-from-zog)
 
 [Latest version](https://eoinmcgrath.com/zog)
