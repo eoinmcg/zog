@@ -7,6 +7,7 @@ import {
 
 import config from '../data/config';
 import state, { resetState } from '../data/state';
+import { playMusic } from '../helpers/music';
 import Scene from "./scene";
 import meteorShower from '../weather/meteorShower';
 import Alert from '../sprites/alert';
@@ -28,6 +29,7 @@ export default class Victory extends Scene {
     new Light3D(vec3(5, 5, 5), 25, new Color(1, 1, 1));
 
     const pal = config.palette;
+    playMusic(7)
 
     const spaceCopy = {
       ...meteorShower,

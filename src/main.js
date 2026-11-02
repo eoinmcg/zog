@@ -5,7 +5,8 @@ import {
   setTileDefaultBleed, setFontDefault,
   setCanvasFixedSize, setCanvasMaxSize,
   setShowSplashScreen, setDebugWatermark,
-  Render3DPlugin, render3D
+  Render3DPlugin, render3D,
+  WavedashPlugin,
 } from "littlejsengine";
 
 import config from "./data/config";
@@ -52,6 +53,10 @@ async function gameInit() {
   } else {
     console.log('DEV MODE')
   }
+
+  new WavedashPlugin({
+    HIGH_SCORE: {},
+  });
 }
 
 

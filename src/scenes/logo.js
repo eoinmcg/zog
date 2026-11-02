@@ -35,13 +35,18 @@ export default class Logo extends Scene {
 
   }
 
+  // renderPost() {
+  //   setFontDefault(this.font)
+  //   const title = config.title.replace(' ', '\n')
+  //   drawText(title, vec2(-20.2, 3.8), 4, config.palette.orange.col, 0, undefined, 'left', this.font)
+  //   drawText(title, vec2(-20, 4), 4, config.palette.grass.col, 0, undefined, 'left', this.font)
+  // }
   renderPost() {
     setFontDefault(this.font)
     const title = config.title.replace(' ', '\n')
-    drawText(title, vec2(-20.2, 3.8), 4, config.palette.orange.col, 0, undefined, 'left', this.font)
-    drawText(title, vec2(-20, 4), 4, config.palette.grass.col, 0, undefined, 'left', this.font)
+    drawText(title, vec2(-0.2, 3.8), 4, config.palette.orange.col, 0, undefined, 'center', this.font)
+    drawText(title, vec2(0, 4), 4, config.palette.grass.col, 0, undefined, 'center', this.font)
   }
-
   saveLogo() {
     const title = config.title.replace(' ', '\n');
     const font = this.font;
@@ -77,7 +82,7 @@ export default class Logo extends Scene {
 
     // Canvas resizing resets context state
     ctx.font = `${fontSize}px "${font}"`;
-    ctx.textAlign = 'left';
+    ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
 
     // Transparent background by default

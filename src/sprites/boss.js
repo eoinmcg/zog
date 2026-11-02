@@ -1,7 +1,8 @@
 import {
   EngineObject3D, Light3D, tile, vec3, vec2,
   buildCylinder, buildBox, buildExtrude,
-  hsl, WHITE, clamp, rand,
+  hsl, WHITE, clamp, rand, time,
+  drawTextScreen, drawText, mainCanvasSize,
 } from 'littlejsengine';
 
 import { spark, boom, bossEntry } from '../helpers/particles';
@@ -59,6 +60,13 @@ export default class Boss extends EngineObject3D {
     this.rushX = 0;
     this.velocity3D = vec3(.1, 0, 0);
 
+    this.message = 'HAHAHA! THERE IS NO ESCAPE!';
+    this.visibleText = '';
+    this.speechStart = time + .5;
+    this.charDelay = .065;
+    this.speechHold = 2;
+    this.speechFinished = false;
+
     state.shake = 1;
     for (let i = 0; i < 10; i++) {
       const p = pos.copy().add(vec3(
@@ -76,6 +84,7 @@ export default class Boss extends EngineObject3D {
   update() {
     if (this.dead) return;
     super.update();
+    if (!this.speechFinished) this.updateSpeech();
 
     if (this.hitTimer > 0) --this.hitTimer;
     --this.phaseTimer;
@@ -123,6 +132,27 @@ export default class Boss extends EngineObject3D {
     if (frame !== this.currentFrame) {
       this.mesh = this.frames[frame]
     }
+  }
+
+  render() {
+
+    super.render()
+    console.log('??')
+    if (!this?.visibleText || this.dead) return;
+    console.log('TEXT')
+
+    drawText(
+      this.visibleText,
+      vec2(0, 4.8),
+      2,
+      config.palette.black.col,
+    );
+    drawText(
+      this.visibleText,
+      vec2(0, 5),
+      2,
+      config.palette.pink.col,
+    );
   }
 
   patrol() {
@@ -265,6 +295,29 @@ export default class Boss extends EngineObject3D {
         )));
         config.sfx.play('explosion')
       })
+    }
+  }
+
+  updateSpeech() {
+    const elapsed = time - this.speechStart;
+
+    if (elapsed < 0) return;
+
+    const count = Math.min(
+      this.message.length,
+      Math.floor(elapsed / this.charDelay) + 1
+    );
+
+    this.visibleText = this.message.slice(0, count);
+
+    // Hide the text after it's been fully displayed
+    const totalDuration =
+      this.message.length * this.charDelay +
+      this.speechHold;
+
+    if (elapsed > totalDuration) {
+      this.visibleText = '';
+      this.speechFinished = true;
     }
   }
 }

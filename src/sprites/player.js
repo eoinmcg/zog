@@ -5,6 +5,7 @@ import {
   clamp, lerp, rand, setPaused,
   keyWasPressed, mouseWasPressed,
   isUsingGamepad, gamepadWasPressed,
+  wavedash,
 } from 'littlejsengine'
 
 import config from '../data/config';
@@ -251,7 +252,17 @@ export default class Player extends EngineObject3D {
     const target = from.add(dir.scale(100));
     target.x = from.x
 
+    const power = state.equipment.raygun.current;
     new Laser(from, target);
+    if (power >= 2) {
+      new Laser(from.add(vec3(-.3, 0, 0)), target);
+    }
+    if (power >= 3) {
+      new Laser(from.add(vec3(.3, 0, 0)), target);
+    }
+    if (power >= 4) {
+      new Laser(from.add(vec3(0, .3, 0)), target);
+    }
     spark(from);
   }
 
@@ -294,7 +305,7 @@ export default class Player extends EngineObject3D {
 
   }
 
-  killed() {
+  async killed() {
     state.shake = 1
     state.speed = 0
     state.gameOver = time
@@ -311,6 +322,9 @@ export default class Player extends EngineObject3D {
       if (state.mute) return
       playMusic(0, false)
     })
+
+    await wavedash.postScore('HIGH_SCORE', state.score);
+
   }
 }
 

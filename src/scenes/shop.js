@@ -345,7 +345,6 @@ class Zoggy extends EngineObject3D {
 
     if (!this.visibleText) return;
 
-    console.log(this.visibleText)
     drawText(
       this.visibleText,
       vec2(5, -100),

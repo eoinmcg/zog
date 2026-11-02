@@ -145,7 +145,7 @@ export default [
     speed: 0,
     distance: 30,
     weather: bgs[6],
-    music: 4,
+    music: 6,
     groundCol: new Color(.4, .3, .4),
     portal: false,
     boss: true,

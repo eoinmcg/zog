@@ -9,7 +9,7 @@ import {
   isTouchDevice,
   Color, BLACK, WHITE, YELLOW, RED,
   drawRect, drawText, drawTile, tile,
-  sin, time, timeDelta
+  sin, time, timeDelta,
 } from 'littlejsengine';
 
 import levels from '../data/levels';
