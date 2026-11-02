@@ -1,4 +1,4 @@
-const cacheName = "escape-from-zog-v-ef4d990";
+const cacheName = "escape-from-zog-v-e556b3d";
 const assets = [
   "./Orbitron-ExtraBold.ttf",
   "./apple-icon-180.png",
@@ -17,7 +17,9 @@ const assets = [
   "./music/DeepSpace.ogg",
   "./music/GalacticBattle.ogg",
   "./music/MeteorShower.ogg",
+  "./music/Nebula.ogg",
   "./music/OrbitalAssault.ogg",
+  "./music/RedDwarf.ogg",
   "./music/gameOver.ogg",
   "./music/levelComplete.ogg",
   "./t.png"
