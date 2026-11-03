@@ -324,7 +324,7 @@ export default class Player extends EngineObject3D {
     })
 
     await wavedash.postScore('HIGH_SCORE', state.score);
-
+    newgrounds && newgrounds.postScore(keys.ng.scoreboards.HIGH_SCORE, state.score);
   }
 }
 

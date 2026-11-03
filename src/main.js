@@ -14,6 +14,7 @@ import state from "./data/state";
 import { preloadAudio, preloadFont, preloadModels } from "./helpers/loaders";
 import favIcon from "./helpers/favicon";
 import SceneManager from "./core/sceneManager";
+import keys from './data/keys.js';
 
 async function gameInit() {
   document.title = config.title
@@ -54,6 +55,7 @@ async function gameInit() {
     console.log('DEV MODE')
   }
 
+  new NewgroundsPlugin(keys.ng.appId, keys.ng.encryptionKey);
   new WavedashPlugin({
     HIGH_SCORE: {},
   });

@@ -81,6 +81,7 @@ export default class Splash extends Scene {
       } else {
         state.plays += 1;
         // playMusic(1)
+        resetState()
         config.sceneManager.changeScene('Play')
       }
     }
