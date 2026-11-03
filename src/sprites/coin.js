@@ -49,7 +49,7 @@ export default class Coin extends EngineObject3D {
     state.coins += 1
     state.levelCoinsCollected += 1 // per level
 
-    if (state.levelCoinsCollected > 20) {
+    if (state.levelCoinsCollected > 50) {
       config.medalByKey.bling.unlock();
     }
   }
