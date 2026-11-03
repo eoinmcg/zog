@@ -77,6 +77,8 @@ export default class Victory extends Scene {
       ufo.scale3D = vec3(.25);
       ufo.rotation3D.x = -PI * .4
       ufo.velocity3D = vec3(0, 0, .05)
+      config.medalByKey.escapee.unlock()
+
     })
 
     state.events.add(1, () => new Alert({ text: 'Bye bye' }))

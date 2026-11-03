@@ -74,6 +74,8 @@ export default class Play extends Scene {
     this.initWeather(state.level.weather);
     state.level.setUp();
 
+    state.levelCoinsCollected = 0
+
     const font = engineImageFont;
     new Alert({
       text: 'LEVEL ' + state.currentLevel,
@@ -142,6 +144,8 @@ export default class Play extends Scene {
 
     if (state.score > state.hiScore) {
       if (!state.newHiscore) {
+
+        config.medalByKey.hi_score.unlock()
         new Alert({
           text: 'NEW HISCORE!',
           fontSize: 1,

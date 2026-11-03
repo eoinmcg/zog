@@ -287,6 +287,7 @@ export default class Shop extends Scene {
 
     if (!state.equipment.glasses.owned) {
       state.equipment.glasses.owned = true
+      config.medalByKey.look_cool.unlock()
       o.name = 'sunglasses'
       tileIndex = state.equipment.glasses.tile
     } else {

@@ -47,6 +47,11 @@ export default class Coin extends EngineObject3D {
     config.sfx.play('alert')
     state.score += 50
     state.coins += 1
+    state.levelCoinsCollected += 1 // per level
+
+    if (state.levelCoinsCollected > 20) {
+      config.medalByKey.bling.unlock();
+    }
   }
 
 }

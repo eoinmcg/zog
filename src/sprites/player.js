@@ -10,6 +10,7 @@ import {
 
 import config from '../data/config';
 import state from '../data/state';
+import keys from '../data/keys';
 import { dust, spark, jetpackFlame } from '../helpers/particles';
 import { playMusic, stopMusic } from '../helpers/music';
 import Laser from './laser'

@@ -6,7 +6,7 @@ import {
   setCanvasFixedSize, setCanvasMaxSize,
   setShowSplashScreen, setDebugWatermark,
   Render3DPlugin, render3D,
-  WavedashPlugin, NewgroundsPlugin,
+  WavedashPlugin, NewgroundsPlugin, Medal, medalsInit,
 } from "littlejsengine";
 
 import config from "./data/config";
@@ -15,6 +15,8 @@ import { preloadAudio, preloadFont, preloadModels } from "./helpers/loaders";
 import favIcon from "./helpers/favicon";
 import SceneManager from "./core/sceneManager";
 import keys from './data/keys.js';
+import medals from './data/medals'
+import DualMedal from './helpers/dualMedal'
 
 async function gameInit() {
   document.title = config.title
@@ -54,6 +56,12 @@ async function gameInit() {
   } else {
     console.log('DEV MODE')
   }
+
+
+  config.medalByKey = {};
+  for (const [key, a] of Object.entries(medals))
+    config.medalByKey[key] = new DualMedal(a);
+  medalsInit(config.title);
 
   new NewgroundsPlugin(keys.ng.appId, keys.ng.encryptionKey);
   new WavedashPlugin({
