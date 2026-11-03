@@ -5,7 +5,7 @@ import {
   clamp, lerp, rand, setPaused,
   keyWasPressed, mouseWasPressed,
   isUsingGamepad, gamepadWasPressed,
-  wavedash,
+  wavedash, newgrounds
 } from 'littlejsengine'
 
 import config from '../data/config';

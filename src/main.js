@@ -6,7 +6,7 @@ import {
   setCanvasFixedSize, setCanvasMaxSize,
   setShowSplashScreen, setDebugWatermark,
   Render3DPlugin, render3D,
-  WavedashPlugin,
+  WavedashPlugin, NewgroundsPlugin,
 } from "littlejsengine";
 
 import config from "./data/config";
