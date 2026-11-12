@@ -74,9 +74,9 @@ export default class Play extends Scene {
 
     state.level.setUp();
     this.initWeather(state.level.weather);
-    // state.events.add(.1,() => {
-    // this.initWeather(state.level.weather);
-    // } )
+    state.events.add(.1,() => {
+    this.initWeather(state.level.weather);
+    } )
 
     state.levelCoinsCollected = 0
 
