@@ -71,8 +71,12 @@ export default class Play extends Scene {
       console.warn('LEVEL DOESNT EXIST. REVERTING to 0')
       state.level = levels[0]
     }
-    this.initWeather(state.level.weather);
+
     state.level.setUp();
+    this.initWeather(state.level.weather);
+    // state.events.add(.1,() => {
+    // this.initWeather(state.level.weather);
+    // } )
 
     state.levelCoinsCollected = 0
 
