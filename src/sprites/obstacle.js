@@ -2,6 +2,7 @@ import {
   EngineObject3D, buildCylinder, buildCone,
   createCanvasContext, TextureInfo, vec3,
   randInt, randSign, PI, hsl, tile,
+  clamp, lerp, render3D,
 } from 'littlejsengine'
 
 import config from '../data/config';
@@ -40,6 +41,7 @@ export default class Obstacle extends EngineObject3D {
     }
 
     super(pos3D, shape, texture, col);
+    this.color = col.copy();
     this.scale3D = vec3(size * (10 * long), size * 2, size);
     this.size3D = vec3(size);      // matches scale3D so collision matches how it looks
     this.setCollision(true, true); // takes part in solid collision, and blocks
@@ -64,15 +66,46 @@ export default class Obstacle extends EngineObject3D {
   }
 
   update() {
-
     this.pos3D.y += (this.targetY - this.pos3D.y) * .05;
     this.velocity3D = vec3(0, 0, state.speed);
-    // this.rotation3D.z += .01
     super.update()
-    if (this.pos3D.z > 10) {
 
+    this.updateFade()
+
+    if (this.pos3D.z > 10) {
       this.destroy()
     }
+  }
+
+  updateFade() {
+
+    if (config.lowQuality) {
+      if (this.transparent) {
+        this.color.a = 1;
+        this.transparent = false;
+      }
+      return;
+    }
+    // 1. mild early fade as it nears the camera: 100% at dz >= 26, 85% at dz <= 15
+    const dz = render3D.camera.pos.z - this.pos3D.z;
+    const early = lerp(.7, 1, clamp((dz - 15) / (26 - 15), 0, 1));
+
+    // 2. stronger fade once it has passed the player (no longer a threat): 100% -> 30% over 6 units
+    let passed = 1;
+    if (state.player) {
+      const behind = this.pos3D.z - state.player.pos3D.z;   // > 0 once past the player
+      passed = lerp(1, .3, clamp(behind / 6, 0, 1));
+    }
+
+    const alpha = Math.min(early, passed);
+    if (alpha >= .99) {
+      this.color.a = 1;
+      this.transparent = false;
+    } else {
+      this.transparent = true;    // flag first, then alpha
+      this.color.a = alpha;
+    }
+
   }
 
   collideWithObject(o) {

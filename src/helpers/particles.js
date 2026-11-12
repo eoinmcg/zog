@@ -1,4 +1,4 @@
-import { ParticleEmitter3D, PI, tile, hsl, vec3 } from "littlejsengine";
+import { ParticleEmitter3D, PI, tile, hsl, rgb, vec3 } from "littlejsengine";
 import config from "../data/config";
 
 export function spark(pos) {
@@ -57,6 +57,20 @@ export function boom(pos, gravity = -.02) {
     .1, .5, true                   // fade, randomness, additive
   );
 }
+
+export function collect(pos, gravity = -.02) {
+  new ParticleEmitter3D(
+    pos,                  // pos
+    .15, .05,                         // emitSize, emitTime
+    200, PI, tile(39, config.tileSize),            // rate, cone, tileInfo
+    rgb(1, .84, .6, .3), rgb(1, 0, 0, .3),     // colorStartA, colorStartB
+    rgb(1, .6, 0, 0),    rgb(1, 0, 0, 0),      // colorEndA, colorEndB
+    1, 1.5, 0,                     // time, sizeStart, sizeEnd
+    .2, .95, gravity,                 // speed, damping, gravity
+    .05, .5, true                   // fade, randomness, additive
+  );
+}
+
 
 export function fire(pos) {
   new ParticleEmitter3D(

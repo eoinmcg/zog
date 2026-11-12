@@ -5,7 +5,7 @@ import {
 
 import config from "../data/config";
 import state from "../data/state";
-import { boom } from "../helpers/particles";
+import { collect, boom } from "../helpers/particles";
 
 export default class Coin extends EngineObject3D {
 
@@ -43,7 +43,7 @@ export default class Coin extends EngineObject3D {
     if (o.name !== 'player') return
 
     this.destroy()
-    boom(o.pos3D.add(vec3(0, 0, 3)))
+    collect(o.pos3D.add(vec3(0, 0, 0)))
     config.sfx.play('alert')
     state.score += 50
     state.coins += 1
