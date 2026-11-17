@@ -3,9 +3,9 @@ import {
   tile, vec2, vec3, Trail3D,
   PI, tweak, timeDelta, time,
   clamp, lerp, rand, setPaused,
-  keyWasPressed, mouseWasPressed,
-  isUsingGamepad, gamepadWasPressed,
-  wavedash, newgrounds
+  keyIsDown, keyWasPressed, mouseWasPressed,
+  isUsingGamepad, gamepadWasPressed, gamepadIsDown,
+  gamepadStick, wavedash, newgrounds
 } from 'littlejsengine'
 
 import config from '../data/config';
@@ -108,6 +108,23 @@ export default class Player extends EngineObject3D {
 
     const swiper = config.swipe;
     const swipeDir = (swiper && swiper.dir === 'tap') ? swiper.screen : false
+
+    // Conventional left/right movement
+    const keyboardX =
+      Number(keyIsDown('ArrowRight')) -
+      Number(keyIsDown('ArrowLeft'));
+
+    const dpadX = isUsingGamepad
+      ? Number(gamepadIsDown(15)) - Number(gamepadIsDown(14))
+      : 0;
+
+    const stickX = isUsingGamepad ? gamepadStick(0).x : 0;
+
+    // Dead zone for analog stick
+    const analogX = Math.abs(stickX) > 0.25 ? stickX : 0;
+
+    const moveX = keyboardX || dpadX || analogX;
+
     const wantsTurn =
       keyWasPressed('ArrowDown') ||
       keyWasPressed('KeyS') ||
@@ -117,11 +134,11 @@ export default class Player extends EngineObject3D {
         mouseWasPressed(0) ||
         gamepadWasPressed(1) ||
         gamepadWasPressed(13) ||
-        gamepadWasPressed(14) ||
         gamepadWasPressed(7)
       ));
 
     const wantsJump =
+      keyWasPressed('Space') ||
       keyWasPressed('ArrowUp') ||
       keyWasPressed('KeyW') ||
       keyWasPressed('KeyZ') ||
@@ -130,7 +147,6 @@ export default class Player extends EngineObject3D {
         mouseWasPressed(1) ||
         gamepadWasPressed(0) ||
         gamepadWasPressed(12) ||
-        gamepadWasPressed(15) ||
         gamepadWasPressed(5) ||
         gamepadWasPressed(4) ||
         gamepadWasPressed(6)
@@ -142,6 +158,20 @@ export default class Player extends EngineObject3D {
       actionTriggered = true;
       config.sfx?.play('jump');
       if (isGrounded) dust(vec3(this.pos3D.x, this.pos3D.y - 0.5, this.pos3D.z));
+    }
+
+    // Directional input overrides the current facing direction
+    if (moveX !== 0) {
+      const newDir = Math.sign(moveX);
+
+      if (this.facingDir !== newDir) {
+        this.facingDir = newDir;
+        actionTriggered = true;
+
+        if (isGrounded) {
+          dust(vec3(this.pos3D.x, this.pos3D.y - 0.5, this.pos3D.z));
+        }
+      }
     }
 
     // if (isGrounded && this.velocity3D.x && rand() > .7) {

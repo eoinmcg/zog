@@ -32,7 +32,7 @@ export default class Coin extends EngineObject3D {
   update() {
 
     this.rotation3D.y += .1
-    this.velocity3D = vec3(0, 0, state.speed * .7);
+    this.velocity3D = vec3(0, 0, state.speed);
 
     super.update()
   }

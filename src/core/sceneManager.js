@@ -16,6 +16,7 @@ import Logo from "../scenes/logo.js";
 import Scratch from "../scenes/scratch.js";
 import Victory from "../scenes/victory";
 import Medal from "../scenes/medal";
+import Skull from "../scenes/skull";
 
 const Scenes = {
   Play: Play,
@@ -28,6 +29,7 @@ const Scenes = {
   Scratch: Scratch,
   Victory: Victory,
   Medal: Medal,
+  Skull: Skull,
 };
 
 export default class SceneManager {

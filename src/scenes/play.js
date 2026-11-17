@@ -108,7 +108,7 @@ export default class Play extends Scene {
 
     state.speed = state.level.speed;
 
-    if (state.currentLevel === 1) {
+    if (state.currentLevel === 1 && isTouchDevice) {
       state.events.add(3, () => {
         new Alert({
           text: isTouchDevice ? 'Tap to zigzag' : 'X to zigzag',
