@@ -119,6 +119,7 @@ export default class Player extends EngineObject3D {
       : 0;
 
     const stickX = isUsingGamepad ? gamepadStick(0).x : 0;
+    const stickY = isUsingGamepad ? gamepadStick(0).y : 0;
 
     // Dead zone for analog stick
     const analogX = Math.abs(stickX) > 0.25 ? stickX : 0;
@@ -132,8 +133,8 @@ export default class Player extends EngineObject3D {
       swipeDir === 'left' ||
       (isUsingGamepad && (
         mouseWasPressed(0) ||
-        gamepadWasPressed(1) ||
         gamepadWasPressed(13) ||
+        gamepadWasPressed(0) ||
         gamepadWasPressed(7)
       ));
 
@@ -145,9 +146,10 @@ export default class Player extends EngineObject3D {
       swipeDir === 'right' ||
       (isUsingGamepad && (
         mouseWasPressed(1) ||
-        gamepadWasPressed(0) ||
+        stickY > 0 ||
         gamepadWasPressed(12) ||
         gamepadWasPressed(5) ||
+        gamepadWasPressed(1) ||
         gamepadWasPressed(4) ||
         gamepadWasPressed(6)
       ));
