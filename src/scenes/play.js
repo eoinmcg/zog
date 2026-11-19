@@ -10,6 +10,7 @@ import {
   Color, BLACK, WHITE, YELLOW, RED,
   drawRect, drawText, drawTile, tile,
   sin, time, timeDelta,
+  gamepadConnected,
 } from 'littlejsengine';
 
 import levels from '../data/levels';
@@ -108,10 +109,20 @@ export default class Play extends Scene {
 
     state.speed = state.level.speed;
 
-    if (state.currentLevel === 1 && isTouchDevice) {
+    if (state.currentLevel === 1) {
+      const mobile = [
+        'Tap left to zigzag',
+        'Tap right to jump',
+      ];
+
+      const desktop = [
+      'Arrows to Move',
+      'Space / Z to jump'
+    ];
+
       state.events.add(3, () => {
         new Alert({
-          text: isTouchDevice ? 'Tap to zigzag' : 'X to zigzag',
+          text: isTouchDevice ? mobile[0]: desktop[0],
           typeSpeed: 500,
           fontSize: 1.5,
           yVel: 0,
@@ -120,7 +131,7 @@ export default class Play extends Scene {
       })
       state.events.add(5, () => {
         new Alert({
-          text: isTouchDevice ? 'Tap to jump' : 'Z to jump',
+          text: isTouchDevice ?  mobile[1] : desktop[1],
           typeSpeed: 500,
           fontSize: 1.5,
           yVel: 0,

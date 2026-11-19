@@ -103,6 +103,7 @@ export default class Scene {
         || gamepadWasPressed(0)
         || gamepadWasPressed(1)
         || gamepadWasPressed(2)
+        || gamepadWasPressed(5)
         || gamepadWasPressed(7)
         || gamepadWasPressed(14)
         || gamepadWasPressed(15)
